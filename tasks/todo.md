@@ -11,13 +11,13 @@
 
 ---
 
-## Phase 2: 크롤링 API 구현 (`src/app/api/crawling`)
+## Phase 2: 크롤링 API 구현 (`src/app/api/crawling`) ✅
 
-- [ ] `GET /api/crawling` 라우트 구현
-  - [ ] `google-play-scraper`로 앱 리뷰 수집 (앱 ID, 언어, 개수 파라미터)
-  - [ ] 수집 결과 정제 (id, userName, score, text, date 필드만 추출)
-  - [ ] 에러 핸들링 (잘못된 앱 ID, 네트워크 오류)
-- [ ] API 응답 타입 정의 (`src/shared/types/review.ts`)
+- [x] `GET /api/crawling` 라우트 구현
+  - [x] `google-play-scraper`로 앱 리뷰 수집 (앱 ID, 언어, 개수 파라미터)
+  - [x] 수집 결과 정제 (id, userName, score, text, date 필드만 추출)
+  - [x] 에러 핸들링 (잘못된 앱 ID, 네트워크 오류)
+- [x] API 응답 타입 정의 (`src/shared/types/review.ts`)
 
 ---
 
@@ -74,6 +74,15 @@
   - [ ] 크롤링 → 분석 플로우 연결
 - [ ] `SettingPage` 구현 (`src/pages/setting`)
   - [ ] 앱 ID 관리, 크롤링 설정 (언어, 리뷰 수)
+
+---
+
+## 추후 검토 항목
+
+- [ ] App Store 크롤링 추가 (`app-store-scraper` 패키지)
+  - [ ] `GET /api/crawling/app-store` 라우트 구현 (앱 ID는 숫자 형태, e.g. `553834731`)
+  - [ ] 타입 정의 추가 (`src/shared/types/review.ts`)
+  - [ ] Google Play vs App Store 리뷰 비교 분석 기능 (Gemini에 양쪽 데이터 전달)
 
 ---
 
