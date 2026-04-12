@@ -174,14 +174,15 @@ interface ActionItem {
 
 ### 에러 케이스 목록
 
-| HTTP 상태코드 | 에러 메시지                                       | 발생 조건                                     |
-| ------------- | ------------------------------------------------- | --------------------------------------------- |
-| 400           | `reviews array is required and must not be empty` | `reviews` 필드가 없거나 빈 배열               |
-| 400           | `Too many reviews. Maximum allowed is 500`        | 리뷰 수가 500개 초과                          |
-| 400           | `Invalid request body`                            | JSON 파싱 실패 (잘못된 형식)                  |
-| 500           | `GEMINI_API_KEY is not configured`                | 환경변수 `GEMINI_API_KEY` 미설정              |
-| 500           | `Failed to parse analysis result`                 | Gemini 응답이 유효한 JSON이 아닌 경우         |
-| 500           | `Failed to analyze reviews`                       | Gemini API 호출 실패 (네트워크, 모델 오류 등) |
+| HTTP 상태코드 | 에러 메시지                                       | 발생 조건                                         |
+| ------------- | ------------------------------------------------- | ------------------------------------------------- |
+| 400           | `reviews array is required and must not be empty` | `reviews` 필드가 없거나 빈 배열                   |
+| 400           | `Invalid review item structure in reviews array`  | `reviews` 배열 원소가 `Review` 구조를 따르지 않음 |
+| 400           | `Too many reviews. Maximum allowed is 500`        | 리뷰 수가 500개 초과                              |
+| 400           | `Invalid request body`                            | JSON 파싱 실패 (잘못된 형식)                      |
+| 500           | `GEMINI_API_KEY is not configured`                | 환경변수 `GEMINI_API_KEY` 미설정                  |
+| 500           | `Failed to parse analysis result`                 | Gemini 응답이 유효한 JSON이 아닌 경우             |
+| 500           | `Failed to analyze reviews`                       | Gemini API 호출 실패 (네트워크, 모델 오류 등)     |
 
 ### 에러 응답 예시
 
