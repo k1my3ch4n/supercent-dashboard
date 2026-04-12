@@ -21,13 +21,13 @@
 
 ---
 
-## Phase 3: AI 분석 API 구현 (`src/app/api/analyze`)
+## Phase 3: AI 분석 API 구현 (`src/app/api/analyze`) ✅
 
-- [ ] `POST /api/analyze` 라우트 구현
-  - [ ] Gemini API 연동 (`@google/generative-ai`)
-  - [ ] 리뷰 배열을 받아 분석 프롬프트 구성
-  - [ ] 분석 결과 파싱: 감성 점수, 카테고리, 페인 포인트, 액션 아이템
-- [ ] 분석 결과 타입 정의 (`src/shared/types/analysis.ts`)
+- [x] `POST /api/analyze` 라우트 구현
+  - [x] Gemini API 연동 (`@google/generative-ai`)
+  - [x] 리뷰 배열을 받아 분석 프롬프트 구성
+  - [x] 분석 결과 파싱: 감성 점수, 카테고리, 페인 포인트, 액션 아이템
+- [x] 분석 결과 타입 정의 (`src/shared/types/analysis.ts`)
 
 ---
 
