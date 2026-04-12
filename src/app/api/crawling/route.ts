@@ -2,6 +2,9 @@ import googlePlay from "google-play-scraper";
 import type { NextRequest } from "next/server";
 import type { Review } from "@/shared/types/review";
 
+const MIN_REVIEW_COUNT = 1;
+const MAX_REVIEW_COUNT = 5000;
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const appId = searchParams.get("appId");
@@ -12,8 +15,11 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "appId is required" }, { status: 400 });
   }
 
-  if (isNaN(num) || num < 1 || num > 5000) {
-    return Response.json({ error: "num must be a number between 1 and 5000" }, { status: 400 });
+  if (!Number.isInteger(num) || num < MIN_REVIEW_COUNT || num > MAX_REVIEW_COUNT) {
+    return Response.json(
+      { error: `num must be an integer between ${MIN_REVIEW_COUNT} and ${MAX_REVIEW_COUNT}` },
+      { status: 400 },
+    );
   }
 
   try {
@@ -31,14 +37,19 @@ export async function GET(request: NextRequest) {
     return Response.json({ reviews, total: reviews.length, appId, lang });
   } catch (error) {
     const isNotFound =
-      error instanceof Error &&
-      (error.message.includes("404") || error.message.includes("not found"));
+      error instanceof Error && (error as Error & { status?: number }).status === 404;
 
     if (isNotFound) {
       return Response.json({ error: `App '${appId}' not found` }, { status: 404 });
     }
 
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return Response.json({ error: `Failed to fetch reviews: ${message}` }, { status: 500 });
+    console.error("Failed to fetch Google Play reviews", {
+      appId,
+      lang,
+      num,
+      error,
+    });
+
+    return Response.json({ error: "Failed to fetch reviews" }, { status: 500 });
   }
 }

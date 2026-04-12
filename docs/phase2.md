@@ -13,15 +13,15 @@ GET /api/crawling
 ```
 
 `google-play-scraper` 라이브러리를 사용해 구글 플레이 스토어에서 리뷰를 실시간으로 크롤링합니다.
-외부 DB 없이 요청 시점에 직접 수집하며, 결과는 캐싱되지 않습니다.
+외부 DB 없이 요청 시점에 직접 수집합니다.
 
 ### Query Parameters
 
-| 파라미터 | 타입   | 필수 여부 | 기본값 | 설명                       |
-| -------- | ------ | --------- | ------ | -------------------------- |
-| `appId`  | string | **필수**  | -      | 구글 플레이 스토어 앱 ID   |
-| `lang`   | string | 선택      | `en`   | 리뷰 언어 코드 (ISO 639-1) |
-| `num`    | number | 선택      | `100`  | 수집할 리뷰 수 (1 ~ 5000)  |
+| 파라미터 | 타입   | 필수 여부 | 기본값 | 설명                           |
+| -------- | ------ | --------- | ------ | ------------------------------ |
+| `appId`  | string | **필수**  | -      | 구글 플레이 스토어 앱 ID       |
+| `lang`   | string | 선택      | `en`   | 리뷰 언어 코드 (ISO 639-1)     |
+| `num`    | number | 선택      | `100`  | 수집할 리뷰 수 (1 ~ 5000 정수) |
 
 **앱 ID 확인 방법**
 
@@ -159,7 +159,7 @@ GET /api/crawling?appId=io.supercent.pizzaidle&num=9999
 
 ```json
 {
-  "error": "num must be a number between 1 and 5000"
+  "error": "num must be an integer between 1 and 5000"
 }
 ```
 
@@ -189,7 +189,7 @@ GET /api/crawling?appId=com.invalid.app.id
 
 ```json
 {
-  "error": "Failed to fetch reviews: <오류 메시지>"
+  "error": "Failed to fetch reviews"
 }
 ```
 
