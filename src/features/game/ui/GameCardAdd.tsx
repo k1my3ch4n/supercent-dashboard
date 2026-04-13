@@ -1,25 +1,24 @@
 "use client";
 
+import { useState } from "react";
+
 interface GameCardAddProps {
   onClick?: () => void;
 }
 
 export default function GameCardAdd({ onClick }: GameCardAddProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div
-      className="rounded-[14px] border border-dashed flex flex-col items-center justify-center gap-[10px] cursor-pointer text-sm min-h-[200px] transition-all duration-150"
-      style={{ borderColor: "var(--border-color)", color: "var(--muted)" }}
+      className={`rounded-size-14 border border-dashed flex flex-col items-center justify-center gap-size-10 cursor-pointer text-sm min-h-size-200 transition-all duration-150 ${
+        isHovered ? "border-color-pink text-color-pink" : "border-border-color text-color-muted"
+      }`}
       onClick={onClick}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = "var(--pink)";
-        (e.currentTarget as HTMLDivElement).style.color = "var(--pink)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border-color)";
-        (e.currentTarget as HTMLDivElement).style.color = "var(--muted)";
-      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="text-[28px]">＋</div>
+      <div className="text-size-28">＋</div>
       <span>게임 추가</span>
     </div>
   );

@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 type NavItem = {
   icon: string;
   label: string;
@@ -46,84 +48,63 @@ export default function Sidebar({
   onNavChange,
   onGameChange,
 }: SidebarProps) {
+  const [isSwitcherHovered, setIsSwitcherHovered] = useState(false);
+  const [hoveredNavKey, setHoveredNavKey] = useState<string | null>(null);
+
   return (
-    <aside
-      className="w-[210px] min-h-screen border-r flex flex-col py-[22px] fixed top-0 left-0 bottom-0 z-10"
-      style={{ background: "var(--card)", borderColor: "var(--border-color)" }}
-    >
+    <aside className="w-size-210 min-h-screen border-r border-border-color flex flex-col py-size-22 fixed top-0 left-0 bottom-0 z-10 bg-color-card">
       {/* 로고 */}
-      <div className="px-[22px] pb-[18px] border-b" style={{ borderColor: "var(--border-color)" }}>
-        <div className="text-[18px] font-black tracking-widest">SUPERCENT</div>
-        <div className="text-[10px] tracking-[2px] mt-0.5" style={{ color: "var(--pink)" }}>
-          Review Intelligence
-        </div>
+      <div className="px-size-22 pb-size-18 border-b border-border-color">
+        <div className="text-size-18 font-black tracking-widest">SUPERCENT</div>
+        <div className="text-size-10 tracking-md mt-0.5 text-color-pink">Review Intelligence</div>
       </div>
 
       {/* 게임 스위처 */}
-      <div className="px-3 py-[14px] border-b" style={{ borderColor: "var(--border-color)" }}>
+      <div className="px-3 py-size-14 border-b border-border-color">
         <div
-          className="flex items-center gap-[10px] px-[10px] py-[9px] rounded-[8px] border cursor-pointer transition-colors duration-150"
-          style={{ borderColor: "var(--border-color)" }}
+          className={`flex items-center gap-size-10 px-size-10 py-size-9 rounded-size-8 border cursor-pointer transition-colors duration-150 ${
+            isSwitcherHovered ? "border-color-pink" : "border-border-color"
+          }`}
           onClick={onGameChange}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLDivElement).style.borderColor = "var(--pink)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border-color)";
-          }}
+          onMouseEnter={() => setIsSwitcherHovered(true)}
+          onMouseLeave={() => setIsSwitcherHovered(false)}
         >
           <div
-            className="w-[30px] h-[30px] rounded-[7px] flex items-center justify-center text-[17px] flex-shrink-0"
+            className="w-size-30 h-size-30 rounded-size-7 flex items-center justify-center text-size-17 flex-shrink-0"
             style={{ background: gameGradient }}
           >
             {gameEmoji}
           </div>
           <div className="flex-1 min-w-0">
             <div className="text-xs font-bold truncate">{gameName}</div>
-            <div className="text-[10px] mt-0.5" style={{ color: "var(--muted)" }}>
-              클릭하여 변경
-            </div>
+            <div className="text-size-10 mt-0.5 text-color-muted">클릭하여 변경</div>
           </div>
-          <span className="text-[11px]" style={{ color: "var(--muted)" }}>
-            ⇄
-          </span>
+          <span className="text-size-11 text-color-muted">⇄</span>
         </div>
       </div>
 
       {/* 네비게이션 */}
-      <nav className="px-3 py-[14px] flex-1 flex flex-col gap-[3px]">
+      <nav className="px-3 py-size-14 flex-1 flex flex-col gap-size-3">
         {NAV_SECTIONS.map((section) => (
           <div key={section.title}>
-            <div
-              className="text-[10px] font-bold tracking-[2px] uppercase px-[10px] py-2 pt-3"
-              style={{ color: "var(--muted)" }}
-            >
+            <div className="text-size-10 font-bold tracking-md uppercase px-size-10 py-2 pt-3 text-color-muted">
               {section.title}
             </div>
             {section.items.map((item: NavItem) => (
               <div
                 key={item.key}
-                className="flex items-center gap-[9px] px-[10px] py-[9px] rounded-[8px] text-sm cursor-pointer transition-all duration-100"
-                style={
+                className={`flex items-center gap-size-9 px-size-10 py-size-9 rounded-size-8 text-sm cursor-pointer transition-all duration-100 ${
                   activeNav === item.key
-                    ? { background: "var(--pink)", color: "#fff", fontWeight: 700 }
-                    : { color: "var(--sub)" }
-                }
+                    ? "bg-color-pink text-white font-bold"
+                    : hoveredNavKey === item.key
+                      ? "bg-color-card-2 text-white"
+                      : "text-color-sub"
+                }`}
                 onClick={() => {
                   onNavChange?.(item.key);
                 }}
-                onMouseEnter={(e) => {
-                  if (activeNav !== item.key) {
-                    (e.currentTarget as HTMLDivElement).style.background = "var(--card2)";
-                    (e.currentTarget as HTMLDivElement).style.color = "#fff";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (activeNav !== item.key) {
-                    (e.currentTarget as HTMLDivElement).style.background = "transparent";
-                    (e.currentTarget as HTMLDivElement).style.color = "var(--sub)";
-                  }
-                }}
+                onMouseEnter={() => setHoveredNavKey(item.key)}
+                onMouseLeave={() => setHoveredNavKey(null)}
               >
                 <span>{item.icon}</span>
                 <span>{item.label}</span>
@@ -134,10 +115,7 @@ export default function Sidebar({
       </nav>
 
       {/* 푸터 */}
-      <div
-        className="px-[22px] pt-[14px] border-t text-[11px]"
-        style={{ borderColor: "var(--border-color)", color: "var(--muted)" }}
-      >
+      <div className="px-size-22 pt-size-14 border-t border-border-color text-size-11 text-color-muted">
         Last synced: just now
       </div>
     </aside>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 export type StoreOption = "google-play" | "app-store" | "galaxy-store";
 
 const STORES: { key: StoreOption; label: string; icon: string; available: boolean }[] = [
@@ -14,53 +16,33 @@ interface StoreSelectorProps {
 }
 
 export default function StoreSelector({ activeStore, onStoreChange }: StoreSelectorProps) {
+  const [hoveredStore, setHoveredStore] = useState<StoreOption | null>(null);
+
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[11px] font-semibold mr-1" style={{ color: "var(--muted)" }}>
-        스토어
-      </span>
+      <span className="text-size-11 font-semibold mr-1 text-color-muted">스토어</span>
       {STORES.map((store) => (
         <button
           key={store.key}
-          className="flex items-center gap-[6px] px-[14px] py-[7px] rounded-full border text-xs font-semibold cursor-pointer transition-all duration-150 disabled:opacity-35 disabled:cursor-not-allowed"
-          style={
+          className={`flex items-center gap-size-6 px-size-14 py-size-7 rounded-full border text-xs font-semibold cursor-pointer transition-all duration-150 disabled:opacity-35 disabled:cursor-not-allowed ${
             activeStore === store.key
-              ? {
-                  borderColor: "var(--pink)",
-                  background: "rgba(255,45,122,.1)",
-                  color: "#fff",
-                }
-              : {
-                  borderColor: "var(--border-color)",
-                  background: "none",
-                  color: "var(--sub)",
-                }
-          }
+              ? "border-color-pink bg-color-pink-a10 text-white"
+              : hoveredStore === store.key && store.available
+                ? "border-color-white-a20 text-white"
+                : "border-border-color bg-transparent text-color-sub"
+          }`}
           disabled={!store.available}
           onClick={() => {
             if (store.available) {
               onStoreChange(store.key);
             }
           }}
-          onMouseEnter={(e) => {
-            if (store.available && activeStore !== store.key) {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,.2)";
-              (e.currentTarget as HTMLButtonElement).style.color = "#fff";
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (store.available && activeStore !== store.key) {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-color)";
-              (e.currentTarget as HTMLButtonElement).style.color = "var(--sub)";
-            }
-          }}
+          onMouseEnter={() => setHoveredStore(store.key)}
+          onMouseLeave={() => setHoveredStore(null)}
         >
           {store.icon} {store.label}
           {!store.available && (
-            <span
-              className="text-[9px] font-bold px-[5px] py-px rounded-[3px]"
-              style={{ background: "rgba(255,255,255,.06)", color: "var(--muted)" }}
-            >
+            <span className="text-size-9 font-bold px-size-5 py-px rounded-size-3 bg-color-white-a06 text-color-muted">
               SOON
             </span>
           )}

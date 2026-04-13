@@ -58,21 +58,13 @@ interface ReviewListProps {
 export default function ReviewList({ newCount = 2 }: ReviewListProps) {
   return (
     <Card>
-      <div
-        className="flex items-center justify-between px-[18px] py-[14px] border-b"
-        style={{ borderColor: "var(--border-color)" }}
-      >
+      <div className="flex items-center justify-between px-size-18 py-size-14 border-b border-border-color">
         <div>
-          <div className="text-[13px] font-extrabold">최근 리뷰</div>
-          <div className="text-[10px] mt-0.5" style={{ color: "var(--sub)" }}>
-            실시간 수집 · Google Play
-          </div>
+          <div className="text-size-13 font-extrabold">최근 리뷰</div>
+          <div className="text-size-10 mt-0.5 text-color-sub">실시간 수집 · Google Play</div>
         </div>
         {newCount > 0 && (
-          <span
-            className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-            style={{ background: "rgba(255,45,122,.14)", color: "var(--pink)" }}
-          >
+          <span className="text-size-10 font-bold px-2 py-0.5 rounded-full bg-color-pink-a14 text-color-pink">
             NEW {newCount}
           </span>
         )}

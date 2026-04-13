@@ -11,7 +11,7 @@ interface GameGridProps {
 export default function GameGrid({ games, onGameClick, onAddClick }: GameGridProps) {
   return (
     <div
-      className="grid gap-[14px] px-10 pb-10 pt-9"
+      className="grid gap-size-14 px-10 pb-10 pt-9"
       style={{ gridTemplateColumns: "repeat(4, 1fr)" }}
     >
       {games.map((game) => (

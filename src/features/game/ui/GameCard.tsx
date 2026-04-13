@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import StoreBadge from "@shared/ui/StoreBadge";
 import { Game, ALL_STORES } from "@features/game/model/mockGames";
 
@@ -9,29 +10,21 @@ interface GameCardProps {
 }
 
 export default function GameCard({ game, onClick }: GameCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div
-      className="rounded-[14px] overflow-hidden cursor-pointer border flex flex-col transition-transform duration-[180ms] hover:-translate-y-1"
-      style={{
-        background: "var(--card)",
-        borderColor: "var(--border-color)",
-        boxShadow: "0 0 0 transparent",
-        transition: "transform .18s, border-color .15s, box-shadow .18s",
-      }}
+      className={`rounded-size-14 overflow-hidden cursor-pointer border flex flex-col transition-all duration-[180ms] hover:-translate-y-1 bg-color-card ${
+        isHovered ? "border-color-white-a18 shadow-lg" : "border-border-color shadow-none"
+      }`}
       onClick={() => {
         onClick(game.id);
       }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,255,255,.18)";
-        (e.currentTarget as HTMLDivElement).style.boxShadow = "0 16px 40px rgba(0,0,0,.55)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border-color)";
-        (e.currentTarget as HTMLDivElement).style.boxShadow = "0 0 0 transparent";
-      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className="w-full relative flex items-center justify-center text-[64px]"
+        className="w-full relative flex items-center justify-center text-size-64"
         style={{ aspectRatio: "4/3", background: game.gradient }}
       >
         <span style={{ zIndex: 1 }}>{game.emoji}</span>
@@ -40,7 +33,7 @@ export default function GameCard({ game, onClick }: GameCardProps) {
           style={{ background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,.55))" }}
         />
       </div>
-      <div className="px-[15px] py-[13px] flex items-center justify-between">
+      <div className="px-size-15 py-size-13 flex items-center justify-between">
         <span
           className="text-sm font-extrabold whitespace-nowrap overflow-hidden text-ellipsis"
           style={{ maxWidth: "calc(100% - 80px)" }}

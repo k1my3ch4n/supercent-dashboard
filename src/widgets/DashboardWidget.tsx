@@ -54,7 +54,7 @@ export default function DashboardWidget({ gameId, onBack }: DashboardWidgetProps
           isAnalyzing={isAnalyzing}
         />
 
-        <div className="flex flex-col gap-[18px] px-7 py-[22px]">
+        <div className="flex flex-col gap-size-18 px-7 py-size-22">
           {/* 스토어 선택 */}
           <StoreSelector activeStore={activeStore} onStoreChange={setActiveStore} />
 

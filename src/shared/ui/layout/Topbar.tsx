@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 export type Period = "7D" | "30D" | "90D";
 
 interface TopbarProps {
@@ -21,48 +23,40 @@ export default function Topbar({
   onRunAI,
   isAnalyzing = false,
 }: TopbarProps) {
+  const [isBackHovered, setIsBackHovered] = useState(false);
   return (
-    <div
-      className="flex items-center justify-between px-7 h-14 border-b sticky top-0 z-[5]"
-      style={{ background: "var(--bg)", borderColor: "var(--border-color)" }}
-    >
+    <div className="flex items-center justify-between px-7 h-14 border-b border-border-color sticky top-0 z-[5] bg-black">
       {/* 왼쪽 */}
       <div className="flex items-center gap-3">
         <button
-          className="flex items-center gap-1 px-[10px] py-[5px] rounded-[8px] border text-xs cursor-pointer transition-all duration-100"
-          style={{ borderColor: "var(--border-color)", background: "none", color: "var(--sub)" }}
+          className={`flex items-center gap-1 px-size-10 py-size-5 rounded-size-8 border text-xs cursor-pointer transition-all duration-100 ${
+            isBackHovered
+              ? "text-white border-color-white-a20"
+              : "text-color-sub border-border-color"
+          }`}
           onClick={onBack}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.color = "#fff";
-            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,.2)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.color = "var(--sub)";
-            (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-color)";
-          }}
+          onMouseEnter={() => setIsBackHovered(true)}
+          onMouseLeave={() => setIsBackHovered(false)}
         >
           ← 목록
         </button>
         <div>
           <div className="text-base font-extrabold">{gameName}</div>
-          <div className="text-[11px] mt-0.5" style={{ color: "var(--sub)" }}>
-            AI Review Intelligence Dashboard
-          </div>
+          <div className="text-size-11 mt-0.5 text-color-sub">AI Review Intelligence Dashboard</div>
         </div>
       </div>
 
       {/* 오른쪽 */}
       <div className="flex items-center gap-2">
-        <div className="flex gap-px rounded-[8px] p-[3px]" style={{ background: "var(--card2)" }}>
+        <div className="flex gap-px rounded-size-8 p-size-3 bg-color-card-2">
           {PERIODS.map((period) => (
             <button
               key={period}
-              className="text-[11px] font-semibold px-[11px] py-[5px] rounded-[6px] cursor-pointer border-none transition-all duration-100"
-              style={
+              className={`text-size-11 font-semibold px-size-11 py-size-5 rounded-size-6 cursor-pointer border-none transition-all duration-100 ${
                 activePeriod === period
-                  ? { background: "var(--card)", color: "#fff" }
-                  : { background: "transparent", color: "var(--sub)" }
-              }
+                  ? "bg-color-card text-white"
+                  : "bg-transparent text-color-sub"
+              }`}
               onClick={() => {
                 onPeriodChange(period);
               }}
@@ -72,12 +66,11 @@ export default function Topbar({
           ))}
         </div>
         <button
-          className="flex items-center gap-[6px] text-white border-none rounded-[8px] px-[14px] py-2 text-xs font-bold cursor-pointer transition-opacity duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
-          style={{ background: "var(--pink)" }}
+          className="flex items-center gap-size-6 text-white border-none rounded-size-8 px-size-14 py-2 text-xs font-bold cursor-pointer transition-opacity duration-150 disabled:opacity-40 disabled:cursor-not-allowed bg-color-pink"
           onClick={onRunAI}
           disabled={isAnalyzing}
         >
-          <div className="w-[7px] h-[7px] rounded-full bg-white flex-shrink-0 pulse-animation" />
+          <div className="w-size-7 h-size-7 rounded-full bg-white flex-shrink-0 pulse-animation" />
           AI 분석 실행
         </button>
       </div>
