@@ -4,6 +4,8 @@ export interface Review {
   score: number;
   text: string;
   date: string;
+  country?: string;
+  sentimentTag?: string;
 }
 
 export interface CrawlingSuccessResponse {
