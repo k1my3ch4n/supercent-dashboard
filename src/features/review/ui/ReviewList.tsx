@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Card from "@shared/ui/Card";
 import LoadingSpinner from "@shared/ui/LoadingSpinner";
 import ErrorMessage from "@shared/ui/ErrorMessage";
@@ -8,12 +9,18 @@ import { useReviewStore } from "@features/review/model/reviewStore";
 
 const AVATAR_COLORS = ["#3d0060", "#7a1a00", "#005530", "#00102a", "#2a0500", "#003070", "#5c3300"];
 
-const MAX_DISPLAY = 10;
+const PAGE_SIZE = 10;
 
 export default function ReviewList() {
   const { reviews, isLoading, error } = useReviewStore();
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const displayedReviews = reviews.slice(0, MAX_DISPLAY);
+  const displayedReviews = reviews.slice(0, visibleCount);
+  const hasMore = visibleCount < reviews.length;
+
+  function handleLoadMore() {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  }
 
   return (
     <Card>
@@ -56,6 +63,16 @@ export default function ReviewList() {
               avatarColor={AVATAR_COLORS[index % AVATAR_COLORS.length]}
             />
           ))}
+        {!isLoading && !error && hasMore && (
+          <div className="px-size-18 py-size-14 border-t border-border-color">
+            <button
+              onClick={handleLoadMore}
+              className="w-full text-size-11 font-bold text-color-sub hover:text-white transition-colors py-1"
+            >
+              더보기 ({reviews.length - visibleCount}개 남음)
+            </button>
+          </div>
+        )}
       </div>
     </Card>
   );
