@@ -14,11 +14,9 @@ interface StoreBadgeProps {
 export default function StoreBadge({ store, active = false }: StoreBadgeProps) {
   return (
     <span
-      className="w-[21px] h-[21px] rounded-[5px] border flex items-center justify-center text-xs flex-shrink-0"
-      style={{
-        borderColor: active ? "rgba(255,255,255,.2)" : "var(--border-color)",
-        color: active ? "#fff" : "var(--muted)",
-      }}
+      className={`w-size-21 h-size-21 rounded-size-5 border flex items-center justify-center text-xs flex-shrink-0 ${
+        active ? "border-color-white-a20 text-white" : "border-border-color text-color-muted"
+      }`}
     >
       {storeIcons[store]}
     </span>

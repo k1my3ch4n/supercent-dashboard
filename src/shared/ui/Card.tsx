@@ -8,8 +8,7 @@ interface CardProps {
 export default function Card({ children, className = "" }: CardProps) {
   return (
     <div
-      className={`rounded-[14px] overflow-hidden border ${className}`}
-      style={{ background: "var(--card)", borderColor: "var(--border-color)" }}
+      className={`rounded-size-14 overflow-hidden border border-border-color bg-color-card ${className}`}
     >
       {children}
     </div>
