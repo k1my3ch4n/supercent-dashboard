@@ -44,45 +44,112 @@
 
 ## Phase 5: UI 컴포넌트 구현
 
-### Shared 컴포넌트 (`src/shared/ui`)
+> 기준: `prototype.html` (2026-04-13 확정)
+> 다크 테마 (#0a0a0a), 핑크 액센트 (#ff2d7a), FSD 구조 준수
 
-- [ ] `Card` 컴포넌트
-- [ ] `Badge` 컴포넌트 (감성 레이블용)
-- [ ] `LoadingSpinner` 컴포넌트
-- [ ] `ErrorMessage` 컴포넌트
+---
 
-### Features (`src/features`)
+### 5-1. Shared 컴포넌트 (`src/shared/ui`)
 
-- [ ] `AppIdInput` — 앱 ID 입력 및 크롤링 시작 (`src/features/review/ui`)
-- [ ] `ReviewList` — 수집된 리뷰 목록 (`src/features/review/ui`)
-- [ ] `SentimentChart` — 감성 점수 시각화 (`src/features/analysis/ui`)
-- [ ] `PainPointList` — 페인 포인트 목록 (`src/features/analysis/ui`)
-- [ ] `ActionItemList` — 액션 아이템 목록 (`src/features/analysis/ui`)
+- [ ] `Card` — 기본 카드 래퍼 (border, radius, overflow)
+- [ ] `Badge` — 색상 variant (pink · green · yellow · blue · purple)
+- [ ] `StoreBadge` — 스토어별 아이콘 뱃지 (Google Play · App Store · Galaxy Store, on/off 상태)
+- [ ] `LoadingSpinner` — AI 분석 실행 중 표시
+- [ ] `ErrorMessage` — API 오류 표시
+- [ ] `ProgressBar` — AI 임팩트 바, 카테고리 비중 바 공용
+- [ ] `PriorityTag` — HIGH · MED · LOW 우선순위 태그
+
+---
+
+### 5-2. 게임 선택 화면 (`src/features/game/ui`)
+
+- [ ] `GameCard` — 게임 썸네일(그라디언트+이모지) + 이름 + StoreBadge 목록
+  - props: `name`, `emoji`, `gradient`, `stores[]`
+  - 클릭 시 대시보드로 이동
+- [ ] `GameCardAdd` — 점선 "게임 추가" 카드 (빈 슬롯)
+- [ ] `GameGrid` — 4열 그리드, GameCard 목록 렌더링
+
+---
+
+### 5-3. 레이아웃 (`src/shared/ui/layout`)
+
+- [ ] `Sidebar` — 로고 · 게임 스위처(클릭 시 선택 화면 복귀) · 네비게이션 · 푸터
+- [ ] `Topbar` — 뒤로가기 · 게임명 · 기간 탭(7D/30D/90D) · AI 분석 실행 버튼
+- [ ] `StoreSelector` — Google Play · App Store · Galaxy Store 칩 (SOON 상태 지원)
+
+---
+
+### 5-4. AI 분석 컴포넌트 (`src/features/analysis/ui`)
+
+- [ ] `AISummaryBlock` — Gemini 종합 분석 배너
+  - 5가지 인사이트 bullet 목록
+  - Health Score · Positive % · Alerts 3종 스코어 박스
+  - "Powered by Gemini" 모델 뱃지
+- [ ] `AIActionItemList` — 우선순위 액션 아이템 목록 (전체 너비 절반 이상)
+  - `AIActionItem` 단위 카드: 우선순위 태그 · 설명 · 영향 세그먼트 칩 · 대응 기한 칩
+  - 하단 임팩트 바: 예상 개선율 + 신뢰도 % + Jira 생성 버튼
+- [ ] `AIPainPointClusters` — AI 자동 클러스터링 결과
+  - `ClusterItem`: 클러스터명 · 리뷰 수 · 대표 인용구 · 키워드 태그
+- [ ] `AICSAutoReply` — 부정 리뷰 AI 자동 답변 초안
+  - 원본 리뷰 영역 + AI 초안 텍스트 + 답변 등록 · 수정 · 재생성 버튼
+  - 다국어 답변 지원 (리뷰 언어에 맞춰 초안 생성)
+- [ ] `AIPredictionPanel` — AI 예측 & 이상 탐지 패널
+  - 평점 예측 포캐스트: 현재 → 14일 후 예측값 + 신뢰도
+  - `AnomalyItem` 목록: ALERT · WARN · INFO 등급별 아이콘 + 설명
+
+---
+
+### 5-5. 리뷰 컴포넌트 (`src/features/review/ui`)
+
+- [ ] `ReviewItem` — 아바타 · 닉네임 · 국가 · 날짜 · 별점 · 감성 태그 · 본문 · 카테고리
+- [ ] `ReviewList` — ReviewItem 목록 + NEW 카운트 배지
+
+---
+
+### 5-6. 대시보드 통계 (`src/features/analysis/ui`)
+
+- [ ] `StatCard` — 지표 카드 (label · value · 변화율)
+  - `highlight` variant: 핑크 테두리 강조
+  - `ai-predict` variant: AI 예측 평점 표시
+- [ ] `StatsRow` — StatCard 4개 가로 배열
+
+---
 
 ### Widgets (`src/widgets`)
 
-- [ ] `DashboardHeader` — 앱 정보 + 크롤링 트리거
-- [ ] `ReviewSection` — 리뷰 목록 + 필터
-- [ ] `AnalysisSection` — 분석 결과 종합 뷰
+- [ ] `GameSelectWidget` — GameGrid + 헤더 조합 (게임 선택 전체 화면)
+- [ ] `DashboardWidget` — 대시보드 전체 조합
+  - StoreSelector → AISummaryBlock → StatsRow
+  - 상단 그리드: AIActionItemList + AIPainPointClusters
+  - 하단 그리드: AICSAutoReply + AIPredictionPanel
 
 ---
 
 ## Phase 6: 페이지 구성
 
+- [ ] `GameSelectPage` 구현 (`src/pages/game-select`)
+  - [ ] GameSelectWidget 렌더링
+  - [ ] 게임 클릭 → 라우팅 (`/dashboard/[gameId]`)
 - [ ] `DashboardPage` 구현 (`src/pages/dashboard`)
-  - [ ] Widget 조합으로 레이아웃 구성
-  - [ ] 크롤링 → 분석 플로우 연결
+  - [ ] Sidebar + Topbar + DashboardWidget 조합
+  - [ ] 스토어 전환 (StoreSelector) → 해당 스토어 데이터 fetch
+  - [ ] 크롤링 → AI 분석 플로우 연결
 - [ ] `SettingPage` 구현 (`src/pages/setting`)
-  - [ ] 앱 ID 관리, 크롤링 설정 (언어, 리뷰 수)
+  - [ ] 게임 목록 관리 (추가 · 삭제 · 앱 ID 설정)
+  - [ ] 크롤링 설정 (언어, 리뷰 수, 스케줄)
 
 ---
 
-## 추후 검토 항목
+## 추후 검토 항목 (스토어 확장)
 
 - [ ] App Store 크롤링 추가 (`app-store-scraper` 패키지)
-  - [ ] `GET /api/crawling/app-store` 라우트 구현 (앱 ID는 숫자 형태, e.g. `553834731`)
+  - [ ] `GET /api/crawling/app-store` 라우트 구현 (앱 ID 숫자 형태, e.g. `553834731`)
   - [ ] 타입 정의 추가 (`src/shared/types/review.ts`)
-  - [ ] Google Play vs App Store 리뷰 비교 분석 기능 (Gemini에 양쪽 데이터 전달)
+  - [ ] StoreSelector `App Store` 칩 활성화
+- [ ] Galaxy Store 크롤링 추가
+  - [ ] `GET /api/crawling/galaxy-store` 라우트 구현
+  - [ ] StoreSelector `Galaxy Store` 칩 활성화
+- [ ] 멀티 스토어 비교 분석 (Gemini에 복수 스토어 데이터 전달)
 
 ---
 

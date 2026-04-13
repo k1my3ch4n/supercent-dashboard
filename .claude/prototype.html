@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supercent Review Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #0a0a0a;
+      --card:   #141414;
+      --card2:  #1c1c1c;
+      --pink:   #ff2d7a;
+      --green:  #00e676;
+      --yellow: #ffe600;
+      --blue:   #00b4ff;
+      --purple: #b66dff;
+      --muted:  #555;
+      --sub:    #999;
+      --border: #2a2a2a;
+      --r:      14px;
+      --r-sm:   8px;
+    }
+
+    body { background: var(--bg); color: #fff; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+    .hidden { display: none !important; }
+
+    /* ── scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+    /* ══════════════════════════
+       SCREEN 1 — GAME SELECT
+    ══════════════════════════ */
+    #screen-select { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .sel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 40px; border-bottom: 1px solid var(--border);
+    }
+
+    .logo-text { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
+    .logo-sub  { font-size: 10px; color: var(--pink); letter-spacing: 2px; margin-top: 2px; }
+
+    .btn-add {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: var(--r-sm);
+      border: 1.5px solid var(--border); background: transparent;
+      color: var(--sub); font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-add:hover { border-color: var(--pink); color: var(--pink); }
+
+    .game-grid {
+      padding: 36px 40px 40px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; flex: 1;
+    }
+
+    .game-card {
+      border-radius: var(--r); overflow: hidden; cursor: pointer;
+      border: 1.5px solid var(--border); background: var(--card);
+      display: flex; flex-direction: column;
+      transition: transform .18s, border-color .15s, box-shadow .18s;
+    }
+    .game-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.18); box-shadow: 0 16px 40px rgba(0,0,0,.55); }
+
+    .game-thumb {
+      width: 100%; aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center; font-size: 64px;
+      position: relative;
+    }
+    .game-thumb::after { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.55)); }
+
+    .game-footer { padding: 13px 15px; display: flex; align-items: center; justify-content: space-between; }
+    .game-name   { font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .store-badges { display: flex; gap: 4px; flex-shrink: 0; }
+    .sb { width: 21px; height: 21px; border-radius: 5px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--muted); }
+    .sb.on { border-color: rgba(255,255,255,.2); color: #fff; }
+
+    .game-card-add {
+      border-radius: var(--r); border: 1.5px dashed var(--border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; cursor: pointer; color: var(--muted); font-size: 13px;
+      min-height: 200px; transition: border-color .15s, color .15s;
+    }
+    .game-card-add:hover { border-color: var(--pink); color: var(--pink); }
+
+    /* ══════════════════════════
+       SCREEN 2 — DASHBOARD
+    ══════════════════════════ */
+    #screen-dashboard { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 210px; min-height: 100vh; background: var(--card);
+      border-right: 1px solid var(--border); display: flex; flex-direction: column;
+      padding: 22px 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 10;
+    }
+    .sb-logo { padding: 0 22px 18px; border-bottom: 1px solid var(--border); }
+    .sb-game { padding: 14px 12px; border-bottom: 1px solid var(--border); }
+
+    .sb-game-row {
+      display: flex; align-items: center; gap: 10px; padding: 9px 10px;
+      border-radius: var(--r-sm); border: 1px solid var(--border); cursor: pointer;
+      transition: border-color .15s;
+    }
+    .sb-game-row:hover { border-color: var(--pink); }
+    .sb-emoji { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .sb-gname { font-size: 12px; font-weight: 700; flex: 1; }
+    .sb-hint  { font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .sb-arr   { font-size: 11px; color: var(--muted); }
+
+    .sb-nav { padding: 14px 12px; flex: 1; display: flex; flex-direction: column; gap: 3px; }
+    .nav-sec  { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; padding: 8px 10px 4px; }
+    .nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: var(--r-sm); font-size: 13px; color: var(--sub); cursor: pointer; transition: all .12s; }
+    .nav-item:hover { background: var(--card2); color: #fff; }
+    .nav-item.active { background: var(--pink); color: #fff; font-weight: 700; }
+    .sb-foot { padding: 14px 22px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); }
+
+    /* Topbar */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; height: 56px; border-bottom: 1px solid var(--border);
+      background: var(--bg); position: sticky; top: 0; z-index: 5;
+    }
+    .tb-left  { display: flex; align-items: center; gap: 12px; }
+    .tb-right { display: flex; align-items: center; gap: 8px; }
+
+    .back-btn {
+      display: flex; align-items: center; gap: 4px; padding: 5px 10px;
+      border-radius: var(--r-sm); border: 1px solid var(--border); background: none;
+      color: var(--sub); font-size: 12px; cursor: pointer; transition: all .12s;
+    }
+    .back-btn:hover { color: #fff; border-color: rgba(255,255,255,.2); }
+
+    .tb-title { font-size: 16px; font-weight: 800; }
+    .tb-sub   { font-size: 11px; color: var(--sub); margin-top: 1px; }
+
+    .period-group { display: flex; gap: 1px; background: var(--card2); border-radius: var(--r-sm); padding: 3px; }
+    .period-btn   { font-size: 11px; font-weight: 600; padding: 5px 11px; border-radius: 6px; cursor: pointer; color: var(--sub); border: none; background: transparent; transition: all .12s; }
+    .period-btn.active { background: var(--card); color: #fff; }
+
+    .btn-ai {
+      display: flex; align-items: center; gap: 6px; background: var(--pink);
+      color: #fff; border: none; border-radius: var(--r-sm); padding: 8px 14px;
+      font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity .15s;
+    }
+    .btn-ai:hover { opacity: .85; }
+    .btn-ai:disabled { opacity: .4; cursor: not-allowed; }
+    .pulse { width: 7px; height: 7px; border-radius: 50%; background: #fff; animation: p 1.5s infinite; flex-shrink: 0; }
+    @keyframes p { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+    /* Main */
+    .main    { margin-left: 210px; flex: 1; display: flex; flex-direction: column; }
+    .content { padding: 22px 28px; display: flex; flex-direction: column; gap: 18px; }
+
+    /* Store selector */
+    .store-sel { display: flex; align-items: center; gap: 8px; }
+    .store-sel-lbl { font-size: 11px; color: var(--muted); font-weight: 600; margin-right: 4px; }
+    .store-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 99px; border: 1.5px solid var(--border); background: none; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--sub); transition: all .15s; }
+    .store-btn:hover:not(:disabled) { border-color: rgba(255,255,255,.2); color: #fff; }
+    .store-btn.active { border-color: var(--pink); background: rgba(255,45,122,.1); color: #fff; }
+    .store-btn:disabled { opacity: .35; cursor: not-allowed; }
+    .soon { font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: rgba(255,255,255,.06); color: var(--muted); }
+
+    /* ── AI Summary (expanded) ── */
+    .ai-summary-block {
+      background: linear-gradient(135deg, rgba(255,45,122,.09), rgba(182,109,255,.07), rgba(0,180,255,.07));
+      border: 1px solid rgba(255,45,122,.22);
+      border-radius: var(--r);
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+    }
+
+    .ai-tag { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--pink); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .ai-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pink); animation: p 1.5s infinite; }
+
+    .ai-insights { display: flex; flex-direction: column; gap: 7px; }
+    .ai-insight-row { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #ccc; line-height: 1.5; }
+    .ai-insight-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .ai-insight-row strong { color: var(--yellow); }
+    .ai-insight-row .hl-red   { color: var(--pink); font-weight: 700; }
+    .ai-insight-row .hl-green { color: var(--green); font-weight: 700; }
+
+    .ai-sum-right { display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+
+    .ai-scores { display: flex; gap: 16px; }
+
+    .ai-score-box { text-align: center; padding: 12px 16px; background: rgba(255,255,255,.04); border-radius: var(--r-sm); border: 1px solid var(--border); min-width: 80px; }
+    .ai-score-n { font-size: 28px; font-weight: 900; line-height: 1; }
+    .ai-score-n.gn { color: var(--green); }
+    .ai-score-n.yw { color: var(--yellow); }
+    .ai-score-n.pk { color: var(--pink); }
+    .ai-score-l { font-size: 9px; color: var(--sub); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+    .ai-model-badge {
+      display: flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 99px;
+      background: rgba(182,109,255,.1); border: 1px solid rgba(182,109,255,.2);
+      font-size: 10px; color: var(--purple); font-weight: 600;
+    }
+
+    /* Stats */
+    .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 18px; display: flex; flex-direction: column; gap: 7px; }
+    .stat-card.hl { border-color: var(--pink); }
+    .stat-hd  { display: flex; align-items: center; justify-content: space-between; }
+    .stat-lbl { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); }
+    .stat-ico { font-size: 16px; }
+    .stat-val { font-size: 30px; font-weight: 900; line-height: 1; }
+    .stat-val.pk { color: var(--pink); }
+    .stat-val.gn { color: var(--green); }
+    .stat-val.yw { color: var(--yellow); }
+    .stat-val.bl { color: var(--blue); }
+    .stat-ch  { font-size: 11px; color: var(--sub); }
+    .up   { color: var(--green); }
+    .dn   { color: var(--pink); }
+
+    /* ── Grid layouts ── */
+    .grid-main { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; }
+    .grid-bot  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* ── Card ── */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+    .card-hd { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px 12px; border-bottom: 1px solid var(--border); }
+    .card-title { font-size: 13px; font-weight: 800; }
+    .card-sub   { font-size: 10px; color: var(--sub); margin-top: 2px; }
+
+    .badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 99px; }
+    .badge.pk { background: rgba(255,45,122,.14); color: var(--pink); }
+    .badge.gn { background: rgba(0,230,118,.11); color: var(--green); }
+    .badge.yw { background: rgba(255,230,0,.11);  color: var(--yellow); }
+    .badge.bl { background: rgba(0,180,255,.11);  color: var(--blue); }
+    .badge.pu { background: rgba(182,109,255,.14); color: var(--purple); }
+
+    /* ══ AI Action Items (enhanced) ══ */
+    .act-list { padding: 14px 18px; display: flex; flex-direction: column; gap: 12px; }
+
+    .act-item {
+      border-radius: var(--r-sm); border: 1px solid var(--border);
+      background: var(--card2); overflow: hidden; cursor: pointer;
+      transition: transform .1s, border-color .15s;
+    }
+    .act-item:hover { transform: translateY(-1px); border-color: rgba(255,255,255,.12); }
+
+    .act-item-top {
+      display: flex; gap: 12px; padding: 13px 14px 10px;
+      border-left: 3px solid transparent;
+    }
+    .act-item.hi  .act-item-top { border-left-color: var(--pink); }
+    .act-item.mid .act-item-top { border-left-color: var(--yellow); }
+    .act-item.lo  .act-item-top { border-left-color: var(--blue); }
+
+    .act-prio { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; height: fit-content; flex-shrink: 0; white-space: nowrap; }
+    .act-prio.hi  { background: rgba(255,45,122,.14); color: var(--pink); }
+    .act-prio.mid { background: rgba(255,230,0,.11);  color: var(--yellow); }
+    .act-prio.lo  { background: rgba(0,180,255,.11);  color: var(--blue); }
+
+    .act-body  { flex: 1; min-width: 0; }
+    .act-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+    .act-desc  { font-size: 11px; color: var(--sub); line-height: 1.5; }
+
+    .act-meta-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+    .act-chip { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: rgba(255,255,255,.04); color: var(--sub); border: 1px solid var(--border); }
+
+    .act-item-bottom {
+      padding: 9px 14px;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(0,0,0,.2);
+    }
+
+    .act-impact-label { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+    .act-impact-bar   { flex: 1; height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .act-impact-fill  { height: 100%; border-radius: 99px; }
+
+    .act-impact-pct { font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .act-confidence { font-size: 10px; color: var(--muted); flex-shrink: 0; margin-left: auto; }
+    .act-btn { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 4px; border: 1px solid var(--border); background: none; color: var(--sub); cursor: pointer; transition: all .12s; flex-shrink: 0; }
+    .act-btn:hover { border-color: var(--pink); color: var(--pink); }
+
+    /* ══ AI Pain Point Clusters ══ */
+    .cluster-list { padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+
+    .cluster-item {
+      border-radius: var(--r-sm); border: 1px solid var(--border);
+      background: var(--card2); padding: 12px 14px; cursor: pointer;
+      transition: border-color .15s;
+    }
+    .cluster-item:hover { border-color: rgba(255,255,255,.15); }
+
+    .cluster-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .cluster-name { font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .cluster-count { font-size: 11px; color: var(--sub); }
+
+    .cluster-quote {
+      font-size: 11px; color: var(--sub); line-height: 1.5;
+      font-style: italic; padding-left: 10px; border-left: 2px solid var(--border); margin-bottom: 7px;
+    }
+
+    .cluster-keywords { display: flex; flex-wrap: wrap; gap: 5px; }
+    .kw { font-size: 10px; padding: 2px 7px; border-radius: 99px; background: rgba(255,255,255,.05); color: var(--sub); border: 1px solid var(--border); }
+
+    /* ══ AI CS Auto Reply ══ */
+    .reply-list { padding: 14px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+    .reply-item { border-radius: var(--r-sm); border: 1px solid var(--border); overflow: hidden; }
+
+    .reply-review { padding: 11px 14px; background: rgba(255,45,122,.04); border-bottom: 1px solid var(--border); }
+    .reply-rev-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+    .reply-user { display: flex; align-items: center; gap: 7px; }
+    .avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+    .rev-name { font-size: 11px; font-weight: 700; }
+    .rev-date { font-size: 10px; color: var(--muted); }
+    .stars { font-size: 11px; color: var(--yellow); }
+    .rev-text { font-size: 11px; color: #bbb; line-height: 1.5; }
+
+    .reply-draft { padding: 11px 14px; }
+    .reply-draft-lbl { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--purple); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .reply-draft-text { font-size: 11px; color: #ccc; line-height: 1.6; }
+    .reply-actions { display: flex; gap: 7px; margin-top: 9px; }
+    .reply-btn { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border); background: none; color: var(--sub); cursor: pointer; transition: all .12s; }
+    .reply-btn:hover { border-color: var(--purple); color: var(--purple); }
+    .reply-btn.primary { background: rgba(182,109,255,.12); border-color: rgba(182,109,255,.3); color: var(--purple); }
+
+    /* ══ AI Prediction Panel ══ */
+    .pred-body { padding: 14px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+    .pred-forecast {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px; background: var(--card2); border-radius: var(--r-sm); border: 1px solid var(--border);
+    }
+    .pred-lbl { font-size: 10px; color: var(--sub); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .pred-row { display: flex; align-items: baseline; gap: 8px; }
+    .pred-curr { font-size: 28px; font-weight: 900; color: var(--yellow); }
+    .pred-arrow { font-size: 16px; }
+    .pred-next { font-size: 22px; font-weight: 900; }
+    .pred-next.up { color: var(--green); }
+    .pred-next.dn { color: var(--pink); }
+    .pred-sub { font-size: 10px; color: var(--sub); margin-top: 3px; }
+    .pred-confidence { margin-left: auto; text-align: center; }
+    .pred-conf-n { font-size: 18px; font-weight: 800; color: var(--purple); }
+    .pred-conf-l { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    .anomaly-list { display: flex; flex-direction: column; gap: 8px; }
+    .anomaly-lbl { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+
+    .anomaly-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 12px; border-radius: var(--r-sm);
+      background: var(--card2); border: 1px solid var(--border);
+    }
+    .anomaly-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .anomaly-text { font-size: 11px; color: #ccc; line-height: 1.5; flex: 1; }
+    .anomaly-text strong { color: #fff; }
+    .anomaly-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; align-self: flex-start; }
+    .anomaly-badge.alert { background: rgba(255,45,122,.14); color: var(--pink); }
+    .anomaly-badge.warn  { background: rgba(255,230,0,.11);  color: var(--yellow); }
+    .anomaly-badge.info  { background: rgba(0,180,255,.11);  color: var(--blue); }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 22px; right: 22px; background: var(--card2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 11px 16px; font-size: 12px; color: #fff; z-index: 999; transform: translateY(8px); opacity: 0; transition: all .2s; pointer-events: none; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════
+       SCREEN 1 — GAME SELECT
+  ══════════════════════════ -->
+  <div id="screen-select">
+    <header class="sel-header">
+      <div>
+        <div class="logo-text">SUPERCENT</div>
+        <div class="logo-sub">Review Intelligence</div>
+      </div>
+      <button class="btn-add" onclick="showToast('게임 추가는 Settings에서 설정할 수 있습니다.')">＋ 게임 추가</button>
+    </header>
+
+    <div class="game-grid">
+      <div class="game-card" onclick="openDash('xp-hero')">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#120030,#3d0060,#7b0050)">🦸</div>
+        <div class="game-footer">
+          <span class="game-name">XP Hero</span>
+          <div class="store-badges">
+            <span class="sb on">🟢</span><span class="sb on">🍎</span><span class="sb">🌐</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-card" onclick="openDash('slime')">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#002010,#005530,#008040)">🟢</div>
+        <div class="game-footer">
+          <span class="game-name">Super Big Slime</span>
+          <div class="store-badges">
+            <span class="sb on">🟢</span><span class="sb">🍎</span><span class="sb on">🌐</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-card" onclick="openDash('dino')">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#1a0d00,#5c3300,#8b5e00)">🦕</div>
+        <div class="game-footer">
+          <span class="game-name">Dinosaur Universe</span>
+          <div class="store-badges">
+            <span class="sb on">🟢</span><span class="sb">🍎</span><span class="sb">🌐</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-card" onclick="openDash('pizza')">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#2a0500,#7a1a00,#bb3a00)">🍕</div>
+        <div class="game-footer">
+          <span class="game-name">Pizza Ready</span>
+          <div class="store-badges">
+            <span class="sb on">🟢</span><span class="sb on">🍎</span><span class="sb on">🌐</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-card" onclick="openDash('wallpaper')">
+        <div class="game-thumb" style="background:linear-gradient(135deg,#00102a,#003070,#0055b0)">🖼️</div>
+        <div class="game-footer">
+          <span class="game-name">Wallpaper Download</span>
+          <div class="store-badges">
+            <span class="sb on">🟢</span><span class="sb on">🍎</span><span class="sb">🌐</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-card-add" onclick="showToast('게임 추가는 Settings에서 설정할 수 있습니다.')">
+        <div style="font-size:28px">＋</div>
+        <span>게임 추가</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════
+       SCREEN 2 — DASHBOARD
+  ══════════════════════════ -->
+  <div id="screen-dashboard" class="hidden">
+
+    <aside class="sidebar">
+      <div class="sb-logo">
+        <div class="logo-text">SUPERCENT</div>
+        <div class="logo-sub">Review Intelligence</div>
+      </div>
+      <div class="sb-game">
+        <div class="sb-game-row" onclick="backToSelect()">
+          <div class="sb-emoji" id="sb-emoji" style="background:linear-gradient(135deg,#3d0060,#7b0050)">🦸</div>
+          <div><div class="sb-gname" id="sb-gname">XP Hero</div><div class="sb-hint">클릭하여 변경</div></div>
+          <span class="sb-arr">⇄</span>
+        </div>
+      </div>
+      <nav class="sb-nav">
+        <div class="nav-sec">Overview</div>
+        <div class="nav-item active"><span>📊</span> Dashboard</div>
+        <div class="nav-item"><span>💬</span> Reviews</div>
+        <div class="nav-sec">AI Analysis</div>
+        <div class="nav-item"><span>🤖</span> AI Insights</div>
+        <div class="nav-item"><span>🎯</span> Action Items</div>
+        <div class="nav-item"><span>📈</span> Predictions</div>
+        <div class="nav-item"><span>✉️</span> CS Auto Reply</div>
+        <div class="nav-sec">Settings</div>
+        <div class="nav-item"><span>⚙️</span> Settings</div>
+      </nav>
+      <div class="sb-foot">Last synced: just now</div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="tb-left">
+          <button class="back-btn" onclick="backToSelect()">← 목록</button>
+          <div>
+            <div class="tb-title" id="tb-title">XP Hero</div>
+            <div class="tb-sub">AI Review Intelligence Dashboard</div>
+          </div>
+        </div>
+        <div class="tb-right">
+          <div class="period-group">
+            <button class="period-btn active" onclick="switchPeriod(this)">7D</button>
+            <button class="period-btn" onclick="switchPeriod(this)">30D</button>
+            <button class="period-btn" onclick="switchPeriod(this)">90D</button>
+          </div>
+          <button class="btn-ai" id="btn-ai" onclick="runAI()">
+            <div class="pulse"></div>AI 분석 실행
+          </button>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <!-- Store selector -->
+        <div class="store-sel">
+          <span class="store-sel-lbl">스토어</span>
+          <button class="store-btn active" onclick="switchStore(this)">🟢 Google Play</button>
+          <button class="store-btn" onclick="switchStore(this)" disabled>🍎 App Store <span class="soon">SOON</span></button>
+          <button class="store-btn" onclick="switchStore(this)" disabled>🌐 Galaxy Store <span class="soon">SOON</span></button>
+        </div>
+
+        <!-- ── AI Summary (expanded) ── -->
+        <div class="ai-summary-block">
+          <div class="ai-sum-left">
+            <div class="ai-tag"><div class="ai-tag-dot"></div> Gemini AI · 종합 분석 리포트</div>
+            <div class="ai-insights">
+              <div class="ai-insight-row"><span class="ai-insight-icon">🔴</span><span><strong>광고 빈도 과다</strong>가 전체 부정 리뷰의 <span class="hl-red">38%</span>를 차지합니다. 특히 레벨 10-20 구간에서 집중 발생 중입니다.</span></div>
+              <div class="ai-insight-row"><span class="ai-insight-icon">⚠️</span><span>이벤트 던전 <strong>크래시 버그</strong>가 신규 감지됐습니다. 지난 48시간 내 <span class="hl-red">147건</span> 급증 — 즉각 대응이 필요합니다.</span></div>
+              <div class="ai-insight-row"><span class="ai-insight-icon">✅</span><span>결제 관련 불만이 전주 대비 <span class="hl-green">23% 감소</span>했습니다. 지난 업데이트의 결제 플로우 개선이 효과를 보이고 있습니다.</span></div>
+              <div class="ai-insight-row"><span class="ai-insight-icon">📊</span><span>일본·독일 유저의 응답률이 낮아 <strong>다국어 CS 대응</strong>이 부재한 상황입니다. 자동 번역 답변 도입을 권고합니다.</span></div>
+              <div class="ai-insight-row"><span class="ai-insight-icon">🔮</span><span>현재 추세 지속 시 <strong>14일 내 평점 3.9 하락</strong>이 예측됩니다. 광고 빈도 조정 시 <span class="hl-green">4.3 회복</span> 가능합니다.</span></div>
+            </div>
+          </div>
+          <div class="ai-sum-right">
+            <div class="ai-scores">
+              <div class="ai-score-box">
+                <div class="ai-score-n gn">7.2</div>
+                <div class="ai-score-l">Health</div>
+              </div>
+              <div class="ai-score-box">
+                <div class="ai-score-n yw">62%</div>
+                <div class="ai-score-l">Positive</div>
+              </div>
+              <div class="ai-score-box">
+                <div class="ai-score-n pk">8</div>
+                <div class="ai-score-l">Alerts</div>
+              </div>
+            </div>
+            <div class="ai-model-badge">🤖 Powered by Gemini 2.0</div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card hl">
+            <div class="stat-hd"><span class="stat-lbl">Total Reviews</span><span class="stat-ico">💬</span></div>
+            <div class="stat-val pk">2,847</div>
+            <div class="stat-ch"><span class="up">↑ 12.4%</span> vs last period</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-hd"><span class="stat-lbl">Avg Rating</span><span class="stat-ico">⭐</span></div>
+            <div class="stat-val yw">4.1</div>
+            <div class="stat-ch"><span class="dn">↓ 0.2</span> vs last period</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-hd"><span class="stat-lbl">AI Predicted</span><span class="stat-ico">🔮</span></div>
+            <div class="stat-val bl">3.9</div>
+            <div class="stat-ch">14일 후 예측 평점</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-hd"><span class="stat-lbl">Critical Issues</span><span class="stat-ico">🚨</span></div>
+            <div class="stat-val pk">8</div>
+            <div class="stat-ch"><span class="dn">+3</span> AI 이상 탐지</div>
+          </div>
+        </div>
+
+        <!-- Main Grid: Action Items + Pain Point Clusters -->
+        <div class="grid-main">
+
+          <!-- AI Action Items (enhanced) -->
+          <div class="card">
+            <div class="card-hd">
+              <div>
+                <div class="card-title">AI 추천 액션 아이템</div>
+                <div class="card-sub">Gemini 분석 · 우선순위 · 예상 임팩트</div>
+              </div>
+              <span class="badge pk">AI</span>
+            </div>
+            <div class="act-list">
+
+              <div class="act-item hi">
+                <div class="act-item-top">
+                  <span class="act-prio hi">HIGH</span>
+                  <div class="act-body">
+                    <div class="act-title">이벤트 던전 크래시 핫픽스</div>
+                    <div class="act-desc">48시간 내 147건 크래시 급증 감지. 핫픽스 배포 전 해당 콘텐츠 임시 비활성화 권고.</div>
+                    <div class="act-meta-row">
+                      <span class="act-chip">📋 372개 리뷰</span>
+                      <span class="act-chip">👥 캐주얼 유저 집중</span>
+                      <span class="act-chip">⏱ 즉시 대응</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="act-item-bottom">
+                  <span class="act-impact-label">예상 부정 리뷰 감소</span>
+                  <div class="act-impact-bar"><div class="act-impact-fill" style="width:72%;background:var(--pink)"></div></div>
+                  <span class="act-impact-pct" style="color:var(--pink)">−72%</span>
+                  <span class="act-confidence">신뢰도 94%</span>
+                  <button class="act-btn">Jira 생성</button>
+                </div>
+              </div>
+
+              <div class="act-item hi">
+                <div class="act-item-top">
+                  <span class="act-prio hi">HIGH</span>
+                  <div class="act-body">
+                    <div class="act-title">광고 노출 빈도 조정</div>
+                    <div class="act-desc">2레벨→5레벨당 1회로 변경. 리워드형 광고 전환 시 이탈률 35% 감소 예측.</div>
+                    <div class="act-meta-row">
+                      <span class="act-chip">📋 286개 리뷰</span>
+                      <span class="act-chip">👥 전 연령대</span>
+                      <span class="act-chip">⏱ 1주 이내</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="act-item-bottom">
+                  <span class="act-impact-label">예상 평점 회복</span>
+                  <div class="act-impact-bar"><div class="act-impact-fill" style="width:58%;background:var(--green)"></div></div>
+                  <span class="act-impact-pct" style="color:var(--green)">+0.3★</span>
+                  <span class="act-confidence">신뢰도 87%</span>
+                  <button class="act-btn">Jira 생성</button>
+                </div>
+              </div>
+
+              <div class="act-item mid">
+                <div class="act-item-top">
+                  <span class="act-prio mid">MED</span>
+                  <div class="act-body">
+                    <div class="act-title">스테이지 48-52 난이도 완화</div>
+                    <div class="act-desc">AI 이탈 분석 결과 48-52 구간 집중. 클리어율 목표 65%로 재조정 권고.</div>
+                    <div class="act-meta-row">
+                      <span class="act-chip">📋 194개 리뷰</span>
+                      <span class="act-chip">👥 미드코어 유저</span>
+                      <span class="act-chip">⏱ 다음 업데이트</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="act-item-bottom">
+                  <span class="act-impact-label">예상 리텐션 개선</span>
+                  <div class="act-impact-bar"><div class="act-impact-fill" style="width:41%;background:var(--yellow)"></div></div>
+                  <span class="act-impact-pct" style="color:var(--yellow)">+41%</span>
+                  <span class="act-confidence">신뢰도 78%</span>
+                  <button class="act-btn">Jira 생성</button>
+                </div>
+              </div>
+
+              <div class="act-item lo">
+                <div class="act-item-top">
+                  <span class="act-prio lo">LOW</span>
+                  <div class="act-body">
+                    <div class="act-title">다국어 CS 자동 답변 도입</div>
+                    <div class="act-desc">일본어·독일어 리뷰 무응답 비율 91%. AI 자동 번역 답변으로 만족도 개선 기대.</div>
+                    <div class="act-meta-row">
+                      <span class="act-chip">📋 87개 리뷰</span>
+                      <span class="act-chip">🌏 JP · DE</span>
+                      <span class="act-chip">⏱ 2주 이내</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="act-item-bottom">
+                  <span class="act-impact-label">예상 긍정 전환율</span>
+                  <div class="act-impact-bar"><div class="act-impact-fill" style="width:28%;background:var(--blue)"></div></div>
+                  <span class="act-impact-pct" style="color:var(--blue)">+28%</span>
+                  <span class="act-confidence">신뢰도 71%</span>
+                  <button class="act-btn">Jira 생성</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- AI Pain Point Clusters -->
+          <div class="card">
+            <div class="card-hd">
+              <div>
+                <div class="card-title">AI 페인포인트 클러스터링</div>
+                <div class="card-sub">유사 불만을 AI가 자동 그룹화</div>
+              </div>
+              <span class="badge pu">AI</span>
+            </div>
+            <div class="cluster-list">
+
+              <div class="cluster-item">
+                <div class="cluster-top">
+                  <span class="cluster-name">📢 <span>광고 과다 노출</span></span>
+                  <span class="cluster-count">372개 리뷰</span>
+                </div>
+                <div class="cluster-quote">"레벨 클리어할 때마다 광고가 나와서 게임 흐름이 끊겨요"</div>
+                <div class="cluster-keywords">
+                  <span class="kw">광고 빈도</span><span class="kw">스킵 불가</span><span class="kw">강제 광고</span><span class="kw">집중 방해</span>
+                </div>
+              </div>
+
+              <div class="cluster-item">
+                <div class="cluster-top">
+                  <span class="cluster-name">⚖️ <span>밸런스 불균형</span></span>
+                  <span class="cluster-count">241개 리뷰</span>
+                </div>
+                <div class="cluster-quote">"스테이지 50부터 갑자기 너무 어려워져서 과금 압박이 느껴짐"</div>
+                <div class="cluster-keywords">
+                  <span class="kw">난이도 급상승</span><span class="kw">페이투윈</span><span class="kw">밸런스 패치</span>
+                </div>
+              </div>
+
+              <div class="cluster-item">
+                <div class="cluster-top">
+                  <span class="cluster-name">💥 <span>크래시 · 기술 오류</span></span>
+                  <span class="cluster-count">147개 리뷰</span>
+                </div>
+                <div class="cluster-quote">"이벤트 던전 들어가면 100% 튕겨요. 업데이트 이후 시작됨"</div>
+                <div class="cluster-keywords">
+                  <span class="kw">앱 충돌</span><span class="kw">이벤트 버그</span><span class="kw">업데이트 후</span>
+                </div>
+              </div>
+
+              <div class="cluster-item">
+                <div class="cluster-top">
+                  <span class="cluster-name">💳 <span>결제 · 보상 불만</span></span>
+                  <span class="cluster-count">89개 리뷰</span>
+                </div>
+                <div class="cluster-quote">"구매했는데 아이템이 안 왔고 CS 응답도 없음"</div>
+                <div class="cluster-keywords">
+                  <span class="kw">결제 오류</span><span class="kw">보상 미지급</span><span class="kw">CS 무응답</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Grid: AI CS Reply + AI Predictions -->
+        <div class="grid-bot">
+
+          <!-- AI CS Auto Reply -->
+          <div class="card">
+            <div class="card-hd">
+              <div>
+                <div class="card-title">AI CS 자동 답변 초안</div>
+                <div class="card-sub">부정 리뷰 → Gemini가 답변 초안 생성</div>
+              </div>
+              <span class="badge pu">AI</span>
+            </div>
+            <div class="reply-list">
+
+              <div class="reply-item">
+                <div class="reply-review">
+                  <div class="reply-rev-top">
+                    <div class="reply-user">
+                      <div class="avatar" style="background:linear-gradient(135deg,#00b4ff,#7c4dff)">J</div>
+                      <div><div class="rev-name">JohnD_gamer · US</div><div class="rev-date">5시간 전</div></div>
+                    </div>
+                    <span class="stars">★★☆☆☆</span>
+                  </div>
+                  <div class="rev-text" style="margin-top:6px">"Ads every 2 levels is insane. Completely ruins the game flow."</div>
+                </div>
+                <div class="reply-draft">
+                  <div class="reply-draft-lbl">🤖 AI 답변 초안</div>
+                  <div class="reply-draft-text">Hi John! Thank you for your honest feedback. We completely understand your frustration with the ad frequency. We're actively reviewing our ad placement strategy and will be rolling out improvements in our next update. We appreciate your patience! 🙏</div>
+                  <div class="reply-actions">
+                    <button class="reply-btn primary">✓ 답변 등록</button>
+                    <button class="reply-btn">수정</button>
+                    <button class="reply-btn">재생성</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="reply-item">
+                <div class="reply-review">
+                  <div class="reply-rev-top">
+                    <div class="reply-user">
+                      <div class="avatar" style="background:linear-gradient(135deg,#ffe600,#ff9800)">S</div>
+                      <div><div class="rev-name">sakura_play · JP</div><div class="rev-date">8시간 전</div></div>
+                    </div>
+                    <span class="stars">★★★☆☆</span>
+                  </div>
+                  <div class="rev-text" style="margin-top:6px">"ステージ50以降が急に難しくなりすぎて楽しめなくなりました。"</div>
+                </div>
+                <div class="reply-draft">
+                  <div class="reply-draft-lbl">🤖 AI 답변 초안 (JP)</div>
+                  <div class="reply-draft-text">sakura_playさん、貴重なご意見をありがとうございます！ステージ難易度については現在チームで改善を検討中です。次回アップデートでバランス調整を行う予定ですので、ぜひご期待ください。</div>
+                  <div class="reply-actions">
+                    <button class="reply-btn primary">✓ 답변 등록</button>
+                    <button class="reply-btn">수정</button>
+                    <button class="reply-btn">재생성</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- AI Predictions & Anomaly Detection -->
+          <div class="card">
+            <div class="card-hd">
+              <div>
+                <div class="card-title">AI 예측 & 이상 탐지</div>
+                <div class="card-sub">평점 예측 · 리뷰 패턴 이상 감지</div>
+              </div>
+              <span class="badge pu">AI</span>
+            </div>
+            <div class="pred-body">
+
+              <!-- Rating Forecast -->
+              <div class="pred-forecast">
+                <div class="pred-forecast-main">
+                  <div class="pred-lbl">AI 평점 예측 (14일 후)</div>
+                  <div class="pred-row">
+                    <span class="pred-curr">4.1</span>
+                    <span class="pred-arrow">→</span>
+                    <span class="pred-next dn">3.9</span>
+                  </div>
+                  <div class="pred-sub">액션 아이템 미조치 시 하락 예측</div>
+                  <div class="pred-sub" style="color:var(--green);margin-top:3px">광고 빈도 조정 시 → <strong>4.4</strong> 예측</div>
+                </div>
+                <div class="pred-confidence">
+                  <div class="pred-conf-n">89%</div>
+                  <div class="pred-conf-l">신뢰도</div>
+                </div>
+              </div>
+
+              <!-- Anomaly Detection -->
+              <div class="anomaly-list">
+                <div class="anomaly-lbl">이상 탐지 알림</div>
+
+                <div class="anomaly-item">
+                  <span class="anomaly-icon">🚨</span>
+                  <div class="anomaly-text"><strong>크래시 리뷰 급증</strong> — 지난 48시간 내 이벤트 던전 관련 크래시 언급이 <strong>+340%</strong> 급증했습니다.</div>
+                  <span class="anomaly-badge alert">ALERT</span>
+                </div>
+
+                <div class="anomaly-item">
+                  <span class="anomaly-icon">⚠️</span>
+                  <div class="anomaly-text"><strong>1성 리뷰 패턴</strong> — 업데이트 v2.1.3 배포 직후 1성 리뷰가 비정상적으로 집중되고 있습니다.</div>
+                  <span class="anomaly-badge warn">WARN</span>
+                </div>
+
+                <div class="anomaly-item">
+                  <span class="anomaly-icon">📈</span>
+                  <div class="anomaly-text"><strong>긍정 반응 증가</strong> — 새 캐릭터 업데이트 이후 JP 유저의 긍정 리뷰가 <strong>+28%</strong> 증가했습니다.</div>
+                  <span class="anomaly-badge info">INFO</span>
+                </div>
+
+                <div class="anomaly-item">
+                  <span class="anomaly-icon">🌍</span>
+                  <div class="anomaly-text"><strong>지역 편향 감지</strong> — DE·JP 리뷰의 CS 무응답률이 <strong>91%</strong>로 글로벌 평균(34%) 대비 이상 수치입니다.</div>
+                  <span class="anomaly-badge warn">WARN</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /content -->
+    </main>
+  </div>
+
+  <div class="toast" id="toast-el"></div>
+
+  <script>
+    var GAMES = {
+      'xp-hero':   { name:'XP Hero',          emoji:'🦸', grad:'linear-gradient(135deg,#3d0060,#7b0050)' },
+      'slime':     { name:'Super Big Slime',   emoji:'🟢', grad:'linear-gradient(135deg,#005530,#008040)' },
+      'dino':      { name:'Dinosaur Universe', emoji:'🦕', grad:'linear-gradient(135deg,#5c3300,#8b5e00)' },
+      'pizza':     { name:'Pizza Ready',       emoji:'🍕', grad:'linear-gradient(135deg,#7a1a00,#bb3a00)' },
+      'wallpaper': { name:'Wallpaper Download',emoji:'🖼️', grad:'linear-gradient(135deg,#003070,#0055b0)' },
+    };
+
+    function openDash(id) {
+      var g = GAMES[id];
+      if (!g) { return; }
+      document.getElementById('sb-emoji').textContent  = g.emoji;
+      document.getElementById('sb-emoji').style.background = g.grad;
+      document.getElementById('sb-gname').textContent  = g.name;
+      document.getElementById('tb-title').textContent  = g.name;
+      document.getElementById('screen-select').classList.add('hidden');
+      document.getElementById('screen-dashboard').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function backToSelect() {
+      document.getElementById('screen-dashboard').classList.add('hidden');
+      document.getElementById('screen-select').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    function switchStore(btn) {
+      if (btn.disabled) { return; }
+      document.querySelectorAll('.store-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+
+    function switchPeriod(btn) {
+      document.querySelectorAll('.period-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+    }
+
+    function runAI() {
+      var btn = document.getElementById('btn-ai');
+      btn.textContent = '분석 중...';
+      btn.disabled = true;
+      setTimeout(function() {
+        btn.innerHTML = '<div class="pulse"></div>AI 분석 실행';
+        btn.disabled = false;
+        showToast('✅ AI 분석 완료 — 인사이트 5건, 이상 탐지 2건이 업데이트됐습니다.');
+      }, 2000);
+    }
+
+    function showToast(msg) {
+      var el = document.getElementById('toast-el');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(function() { el.classList.remove('show'); }, 3500);
+    }
+  </script>
+</body>
+</html>
