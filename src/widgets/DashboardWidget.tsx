@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@shared/ui/layout/Sidebar";
 import Topbar from "@shared/ui/layout/Topbar";
@@ -10,8 +11,11 @@ import AIActionItemList from "@features/analysis/ui/AIActionItemList";
 import AIPainPointClusters from "@features/analysis/ui/AIPainPointClusters";
 import AICSAutoReply from "@features/analysis/ui/AICSAutoReply";
 import AIPredictionPanel from "@features/analysis/ui/AIPredictionPanel";
+import ReviewList from "@features/review/ui/ReviewList";
 import { useRunAnalysis } from "@features/analysis/model/useRunAnalysis";
-import { MOCK_GAMES } from "@features/game/model/mockGames";
+import { useGameStore } from "@features/game/model/gameStore";
+import { useReviewStore } from "@features/review/model/reviewStore";
+import { GAMES } from "@features/game/model/games";
 
 interface DashboardWidgetProps {
   gameId: string;
@@ -19,9 +23,16 @@ interface DashboardWidgetProps {
 
 export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
   const router = useRouter();
-  const game = MOCK_GAMES.find((game) => game.id === gameId) ?? MOCK_GAMES[0];
+  const games = useGameStore((state) => state.games);
+  const fetchReviews = useReviewStore((state) => state.fetchReviews);
 
-  const { isAnalyzing, runAnalysis } = useRunAnalysis();
+  const game = games.find((game) => game.id === gameId) ?? GAMES[0];
+
+  const { isAnalyzing, runAnalysis } = useRunAnalysis(game.appId);
+
+  useEffect(() => {
+    fetchReviews(game.appId);
+  }, [game.appId, fetchReviews]);
 
   const handleBack = () => {
     router.push("/");
@@ -60,6 +71,9 @@ export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
             <AICSAutoReply />
             <AIPredictionPanel />
           </div>
+
+          {/* 리뷰 목록 */}
+          <ReviewList />
         </div>
       </main>
     </div>
