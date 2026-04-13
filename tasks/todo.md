@@ -42,47 +42,208 @@
 
 ---
 
-## Phase 5: UI 컴포넌트 구현
+## Phase 5: UI 컴포넌트 구현 ✅
 
-### Shared 컴포넌트 (`src/shared/ui`)
+> 기준: `prototype.html` (2026-04-13 확정)
+> 다크 테마 (#0a0a0a), 핑크 액센트 (#ff2d7a), FSD 구조 준수
 
-- [ ] `Card` 컴포넌트
-- [ ] `Badge` 컴포넌트 (감성 레이블용)
-- [ ] `LoadingSpinner` 컴포넌트
-- [ ] `ErrorMessage` 컴포넌트
+---
 
-### Features (`src/features`)
+### 5-1. Shared 컴포넌트 (`src/shared/ui`)
 
-- [ ] `AppIdInput` — 앱 ID 입력 및 크롤링 시작 (`src/features/review/ui`)
-- [ ] `ReviewList` — 수집된 리뷰 목록 (`src/features/review/ui`)
-- [ ] `SentimentChart` — 감성 점수 시각화 (`src/features/analysis/ui`)
-- [ ] `PainPointList` — 페인 포인트 목록 (`src/features/analysis/ui`)
-- [ ] `ActionItemList` — 액션 아이템 목록 (`src/features/analysis/ui`)
+- [x] `Card` — 기본 카드 래퍼 (border, radius, overflow)
+- [x] `Badge` — 색상 variant (pink · green · yellow · blue · purple)
+- [x] `StoreBadge` — 스토어별 아이콘 뱃지 (Google Play · App Store · Galaxy Store, on/off 상태)
+- [x] `LoadingSpinner` — AI 분석 실행 중 표시
+- [x] `ErrorMessage` — API 오류 표시
+- [x] `ProgressBar` — AI 임팩트 바, 카테고리 비중 바 공용
+- [x] `PriorityTag` — HIGH · MED · LOW 우선순위 태그
+
+---
+
+### 5-2. 게임 선택 화면 (`src/features/game/ui`)
+
+- [x] `GameCard` — 게임 썸네일(그라디언트+이모지) + 이름 + StoreBadge 목록
+  - props: `name`, `emoji`, `gradient`, `stores[]`
+  - 클릭 시 대시보드로 이동
+- [x] `GameCardAdd` — 점선 "게임 추가" 카드 (빈 슬롯)
+- [x] `GameGrid` — 4열 그리드, GameCard 목록 렌더링
+
+---
+
+### 5-3. 레이아웃 (`src/shared/ui/layout`)
+
+- [x] `Sidebar` — 로고 · 게임 스위처(클릭 시 선택 화면 복귀) · 네비게이션 · 푸터
+- [x] `Topbar` — 뒤로가기 · 게임명 · 기간 탭(7D/30D/90D) · AI 분석 실행 버튼
+- [x] `StoreSelector` — Google Play · App Store · Galaxy Store 칩 (SOON 상태 지원)
+
+---
+
+### 5-4. AI 분석 컴포넌트 (`src/features/analysis/ui`)
+
+- [x] `AISummaryBlock` — Gemini 종합 분석 배너
+  - 5가지 인사이트 bullet 목록
+  - Health Score · Positive % · Alerts 3종 스코어 박스
+  - "Powered by Gemini" 모델 뱃지
+- [x] `AIActionItemList` — 우선순위 액션 아이템 목록 (전체 너비 절반 이상)
+  - `AIActionItem` 단위 카드: 우선순위 태그 · 설명 · 영향 세그먼트 칩 · 대응 기한 칩
+  - 하단 임팩트 바: 예상 개선율 + 신뢰도 % + Jira 생성 버튼
+- [x] `AIPainPointClusters` — AI 자동 클러스터링 결과
+  - `ClusterItem`: 클러스터명 · 리뷰 수 · 대표 인용구 · 키워드 태그
+- [x] `AICSAutoReply` — 부정 리뷰 AI 자동 답변 초안
+  - 원본 리뷰 영역 + AI 초안 텍스트 + 답변 등록 · 수정 · 재생성 버튼
+  - 다국어 답변 지원 (리뷰 언어에 맞춰 초안 생성)
+- [x] `AIPredictionPanel` — AI 예측 & 이상 탐지 패널
+  - 평점 예측 포캐스트: 현재 → 14일 후 예측값 + 신뢰도
+  - `AnomalyItem` 목록: ALERT · WARN · INFO 등급별 아이콘 + 설명
+
+---
+
+### 5-5. 리뷰 컴포넌트 (`src/features/review/ui`)
+
+- [x] `ReviewItem` — 아바타 · 닉네임 · 날짜 · 별점 · 감성 태그 · 본문 · 카테고리
+  > ~~국가 필드~~ — Review 타입 미지원, Phase 5에서는 생략 (추후 타입 확장 시 추가)
+- [x] `ReviewList` — ReviewItem 목록 + NEW 카운트 배지
+
+---
+
+### 5-6. 대시보드 통계 (`src/features/analysis/ui`)
+
+- [x] `StatCard` — 지표 카드 (label · value · 변화율)
+  - `highlight` variant: 핑크 테두리 강조
+  - `ai-predict` variant: AI 예측 평점 표시
+- [x] `StatsRow` — StatCard 4개 가로 배열
+
+---
 
 ### Widgets (`src/widgets`)
 
-- [ ] `DashboardHeader` — 앱 정보 + 크롤링 트리거
-- [ ] `ReviewSection` — 리뷰 목록 + 필터
-- [ ] `AnalysisSection` — 분석 결과 종합 뷰
+- [x] `GameSelectWidget` — GameGrid + 헤더 조합 (게임 선택 전체 화면)
+- [x] `DashboardWidget` — 대시보드 전체 조합
+  - StoreSelector → AISummaryBlock → StatsRow
+  - 상단 그리드: AIActionItemList + AIPainPointClusters
+  - 하단 그리드: AICSAutoReply + AIPredictionPanel
 
 ---
 
-## Phase 6: 페이지 구성
+## Phase 5-CSS: Tailwind 토큰 통합 (var() → className 변환)
 
-- [ ] `DashboardPage` 구현 (`src/pages/dashboard`)
-  - [ ] Widget 조합으로 레이아웃 구성
-  - [ ] 크롤링 → 분석 플로우 연결
-- [ ] `SettingPage` 구현 (`src/pages/setting`)
-  - [ ] 앱 ID 관리, 크롤링 설정 (언어, 리뷰 수)
+> globals.css 에 정의된 @theme 토큰을 모든 컴포넌트에서 inline style이 아닌 className으로 활용
+
+### 작업 범위
+
+- ✅ 총 22개 파일 변환 완료
+- ✅ inline style에서 color/background/borderColor를 className으로 이동
+- ✅ config objects 내 색상 참조를 color 토큰 className으로 변환
+- ✅ 이벤트 핸들러의 직접 style 조작 → state + className 기반 리팩토링
+
+### 작업 파일 목록
+
+#### Shared UI (11개)
+
+- [x] `shared/ui/Card.tsx` — bg-color-card, border-border-color ✅
+- [x] `shared/ui/Badge.tsx` — config 색상 → className 분리 ✅
+- [x] `shared/ui/PriorityTag.tsx` — config 색상 → className 분리 ✅
+- [x] `shared/ui/ErrorMessage.tsx` — inline style 제거 ✅
+- [x] `shared/ui/LoadingSpinner.tsx` — spinner 색상, text 색상 ✅
+- [x] `shared/ui/ProgressBar.tsx` — color prop → className ✅
+- [x] `shared/ui/StoreBadge.tsx` — inline color/borderColor ✅
+- [x] `shared/ui/layout/Sidebar.tsx` — 여러 inline style + 이벤트 핸들러 ✅
+- [x] `shared/ui/layout/Topbar.tsx` — 여러 inline style + 이벤트 핸들러 ✅
+- [x] `shared/ui/layout/StoreSelector.tsx` — style + 이벤트 핸들러 ✅
+
+#### Features (11개)
+
+- [x] `features/review/ui/ReviewItem.tsx` — color 객체 + inline style ✅
+- [x] `features/review/ui/ReviewList.tsx` — inline style ✅
+- [x] `features/game/ui/GameCard.tsx` — config 객체 style ✅
+- [x] `features/game/ui/GameCardAdd.tsx` — 이벤트 핸들러 리팩토링 ✅
+- [x] `features/analysis/ui/AIActionItemList.tsx` — config 색상 + 이벤트 핸들러 ✅
+- [x] `features/analysis/ui/AIPainPointClusters.tsx` — inline style + 이벤트 핸들러 ✅
+- [x] `features/analysis/ui/AIPredictionPanel.tsx` — config 색상 + inline style ✅
+- [x] `features/analysis/ui/AICSAutoReply.tsx` — 여러 style + 이벤트 핸들러 ✅
+- [x] `features/analysis/ui/AISummaryBlock.tsx` — config colorVar + inline style ✅
+- [ ] `features/analysis/ui/StatCard.tsx` — 삼항 연산자 color + inline style ✅ (완료이미 표시됨)
+- [ ] `features/analysis/ui/StatsRow.tsx` — valueColor prop ✅ (완료이미 표시됨)
+
+#### Widgets (1개)
+
+- [x] `widgets/GameSelectWidget.tsx` — 이벤트 핸들러 리팩토링 ✅
 
 ---
 
-## 추후 검토 항목
+## Phase 5-Refactor: Widgets 비즈니스 로직 → Features 분리
+
+> widgets 레이어에 혼재된 비즈니스 로직을 FSD 원칙에 따라 features로 이동
+
+- [x] `features/game/model/useGame.ts` 생성
+  - `gameId`로 게임 객체를 조회하는 hook
+  - `DashboardWidget`의 `MOCK_GAMES.find(...)` + 폴백 로직 이동
+- [x] `features/analysis/model/useRunAnalysis.ts` 생성
+  - AI 분석 실행 + `isAnalyzing` 상태를 캡슐화하는 hook
+  - `DashboardWidget`의 `handleRunAI` + `isAnalyzing` 상태 이동
+  - `useAnalysisStore`의 `isLoading` 을 `isAnalyzing`으로 노출
+- [x] `features/game/model/useGameActions.ts` 생성
+  - 게임 추가 액션을 캡슐화하는 hook
+  - `GameSelectWidget`의 `handleAddClick` 로직 이동
+- [x] `DashboardWidget.tsx` 리팩토링
+  - `useGame`, `useRunAnalysis` hook으로 교체
+  - 불필요한 import 제거
+- [x] `GameSelectWidget.tsx` 리팩토링
+  - `useGameActions` hook으로 교체
+
+---
+
+## Phase 6: 페이지 라우팅 구성
+
+> 단일 페이지 `useState` 전환 방식 → Next.js App Router 동적 라우트로 전환
+
+- [x] `src/app/page.tsx` — useState 제거, `GameSelectWidget`만 렌더링
+- [x] `src/app/detail/[id]/page.tsx` — 동적 라우트 생성, `DashboardWidget` 렌더링
+- [x] `GameSelectWidget` — `onGameSelect` 콜백 제거, `router.push('/detail/:id')` 적용
+- [x] `DashboardWidget` — `onBack` prop 제거, `router.push('/')` 내부화
+- [x] `Sidebar` — `onGameChange` prop 제거, `router.push('/')` 내부화
+- [x] `Topbar` — `onBack` prop 제거, `router.push('/')` 내부화
+- [ ] `SettingPage` 구현 (`src/pages/setting`) — 추후
+  - [ ] 게임 목록 관리 (추가 · 삭제 · 앱 ID 설정)
+  - [ ] 크롤링 설정 (언어, 리뷰 수, 스케줄)
+
+---
+
+## 추후 검토 항목 (Phase 5 → 실데이터 연동)
+
+> Phase 5에서 목 데이터로 구현된 항목들. Phase 6 이후 실데이터로 교체 필요.
+
+- [ ] **게임 목록 스토어 구현** (`src/features/game/model/gameStore.ts`)
+  - 현재 `MOCK_GAMES` 하드코딩 → Zustand 스토어로 교체
+  - Settings에서 게임 추가/삭제/앱ID 설정 연동
+
+- [ ] **AnalysisResult 타입 확장** (`src/shared/types/analysis.ts`)
+  - `AIPainPointClusters`용: `clusterName`, `reviewCount`, `quote`, `keywords`
+  - `AICSAutoReply`용: 부정 리뷰 + AI 초안 텍스트 (다국어)
+  - `AIPredictionPanel`용: 예측 평점, 이상 탐지 목록 (ALERT/WARN/INFO)
+  - `AISummaryBlock`용: Health Score, Positive %, Alerts count
+  - Gemini 프롬프트도 함께 수정 필요
+
+- [ ] **Review 타입 확장** (`src/shared/types/review.ts`)
+  - `country` 필드 추가 → ReviewItem에 국가 표시
+  - `sentimentTag` 필드 추가
+
+- [ ] **목 데이터 제거** — 실 API 연동 후 각 컴포넌트에서 props로 받도록 변경
+  - `AISummaryBlock`, `AIActionItemList`, `AIPainPointClusters`, `AICSAutoReply`, `AIPredictionPanel`, `StatsRow`, `ReviewList`
+
+---
+
+## 추후 검토 항목 (스토어 확장)
 
 - [ ] App Store 크롤링 추가 (`app-store-scraper` 패키지)
-  - [ ] `GET /api/crawling/app-store` 라우트 구현 (앱 ID는 숫자 형태, e.g. `553834731`)
+  - [ ] `GET /api/crawling/app-store` 라우트 구현 (앱 ID 숫자 형태, e.g. `553834731`)
   - [ ] 타입 정의 추가 (`src/shared/types/review.ts`)
-  - [ ] Google Play vs App Store 리뷰 비교 분석 기능 (Gemini에 양쪽 데이터 전달)
+  - [ ] StoreSelector `App Store` 칩 활성화
+- [ ] Galaxy Store 크롤링 추가
+  - [ ] `GET /api/crawling/galaxy-store` 라우트 구현
+  - [ ] StoreSelector `Galaxy Store` 칩 활성화
+- [ ] 멀티 스토어 비교 분석 (Gemini에 복수 스토어 데이터 전달)
 
 ---
 

@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { NextRequest } from "next/server";
-import type { Review } from "@/shared/types/review";
-import type { AnalysisResult } from "@/shared/types/analysis";
+import type { Review } from "@shared/types/review";
+import type { AnalysisResult } from "@shared/types/analysis";
 
 const MAX_REVIEWS = 500;
 const MIN_SCORE = 1;

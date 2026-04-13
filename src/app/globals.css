@@ -1,26 +1,217 @@
 @import "tailwindcss";
 
+@theme {
+  --color-bg: #0a0a0a;
+  --color-card: #141414;
+  --color-card2: #1c1c1c;
+  --color-pink: #ff2d7a;
+  --color-green: #00e676;
+  --color-yellow: #ffe600;
+  --color-blue: #00b4ff;
+  --color-purple: #b66dff;
+  --color-muted: #555;
+  --color-sub: #999;
+  --color-border-color: #2a2a2a;
+  --color-text-weak: #bbb;
+  --color-text-soft: #ccc;
+  --size-1: 1px;
+  --size-2: 2px;
+  --size-3: 3px;
+  --size-4: 4px;
+  --size-5: 5px;
+  --size-6: 6px;
+  --size-7: 7px;
+  --size-8: 8px;
+  --size-9: 9px;
+  --size-10: 10px;
+  --size-11: 11px;
+  --size-12: 12px;
+  --size-13: 13px;
+  --size-14: 14px;
+  --size-15: 15px;
+  --size-17: 17px;
+  --size-18: 18px;
+  --size-21: 21px;
+  --size-22: 22px;
+  --size-28: 28px;
+  --size-30: 30px;
+  --size-64: 64px;
+  --size-80: 80px;
+  --size-200: 200px;
+  --size-210: 210px;
+  --tracking-xs: 0.5px;
+  --tracking-sm: 1px;
+  --tracking-md: 2px;
+
+  /* Compatibility aliases for current class naming convention */
+  --color-color-bg: var(--color-bg);
+  --color-color-card: var(--color-card);
+  --color-color-card-2: var(--color-card2);
+  --color-color-pink: var(--color-pink);
+  --color-color-green: var(--color-green);
+  --color-color-yellow: var(--color-yellow);
+  --color-color-blue: var(--color-blue);
+  --color-color-purple: var(--color-purple);
+  --color-color-muted: var(--color-muted);
+  --color-color-sub: var(--color-sub);
+  --color-color-border-color: var(--color-border-color);
+  --color-color-soft: var(--color-text-soft);
+  --color-color-weak: var(--color-text-weak);
+
+  --color-color-white-a03: var(--color-white-a03);
+  --color-color-white-a04: var(--color-white-a04);
+  --color-color-white-a05: var(--color-white-a05);
+  --color-color-white-a06: var(--color-white-a06);
+  --color-color-white-a12: var(--color-white-a12);
+  --color-color-white-a15: var(--color-white-a15);
+  --color-color-white-a18: var(--color-white-a18);
+  --color-color-white-a20: var(--color-white-a20);
+  --color-color-black-a20: var(--color-black-a20);
+  --color-color-black-a55: var(--color-black-a55);
+  --color-color-pink-a04: var(--color-pink-a04);
+  --color-color-pink-a06: var(--color-pink-a06);
+  --color-color-pink-a10: var(--color-pink-a10);
+  --color-color-pink-a12: var(--color-pink-a12);
+  --color-color-pink-a14: var(--color-pink-a14);
+  --color-color-pink-a20: var(--color-pink-a20);
+  --color-color-pink-a22: var(--color-pink-a22);
+  --color-color-purple-a07: var(--color-purple-a07);
+  --color-color-purple-a10: var(--color-purple-a10);
+  --color-color-purple-a12: var(--color-purple-a12);
+  --color-color-purple-a14: var(--color-purple-a14);
+  --color-color-purple-a20: var(--color-purple-a20);
+  --color-color-purple-a30: var(--color-purple-a30);
+  --color-color-blue-a07: var(--color-blue-a07);
+  --color-color-blue-a11: var(--color-blue-a11);
+  --color-color-green-a11: var(--color-green-a11);
+  --color-color-green-a12: var(--color-green-a12);
+  --color-color-yellow-a11: var(--color-yellow-a11);
+  --color-color-yellow-a12: var(--color-yellow-a12);
+
+  --spacing-size-1: var(--size-1);
+  --spacing-size-2: var(--size-2);
+  --spacing-size-3: var(--size-3);
+  --spacing-size-4: var(--size-4);
+  --spacing-size-5: var(--size-5);
+  --spacing-size-6: var(--size-6);
+  --spacing-size-7: var(--size-7);
+  --spacing-size-8: var(--size-8);
+  --spacing-size-9: var(--size-9);
+  --spacing-size-10: var(--size-10);
+  --spacing-size-11: var(--size-11);
+  --spacing-size-12: var(--size-12);
+  --spacing-size-13: var(--size-13);
+  --spacing-size-14: var(--size-14);
+  --spacing-size-15: var(--size-15);
+  --spacing-size-17: var(--size-17);
+  --spacing-size-18: var(--size-18);
+  --spacing-size-21: var(--size-21);
+  --spacing-size-22: var(--size-22);
+  --spacing-size-28: var(--size-28);
+  --spacing-size-30: var(--size-30);
+  --spacing-size-64: var(--size-64);
+  --spacing-size-80: var(--size-80);
+  --spacing-size-200: var(--size-200);
+  --spacing-size-210: var(--size-210);
+
+  --text-size-9: var(--size-9);
+  --text-size-10: var(--size-10);
+  --text-size-11: var(--size-11);
+  --text-size-12: var(--size-12);
+  --text-size-13: var(--size-13);
+  --text-size-14: var(--size-14);
+  --text-size-15: var(--size-15);
+  --text-size-17: var(--size-17);
+  --text-size-18: var(--size-18);
+  --text-size-21: var(--size-21);
+  --text-size-22: var(--size-22);
+  --text-size-28: var(--size-28);
+  --text-size-30: var(--size-30);
+
+  --radius-size-3: var(--size-3);
+  --radius-size-4: var(--size-4);
+  --radius-size-6: var(--size-6);
+  --radius-size-7: var(--size-7);
+  --radius-size-8: var(--size-8);
+  --radius-size-14: var(--size-14);
+
+  --border-width-size-3: var(--size-3);
+  --color-white-a03: rgba(255, 255, 255, 0.03);
+  --color-white-a04: rgba(255, 255, 255, 0.04);
+  --color-white-a05: rgba(255, 255, 255, 0.05);
+  --color-white-a06: rgba(255, 255, 255, 0.06);
+  --color-white-a12: rgba(255, 255, 255, 0.12);
+  --color-white-a15: rgba(255, 255, 255, 0.15);
+  --color-white-a18: rgba(255, 255, 255, 0.18);
+  --color-white-a20: rgba(255, 255, 255, 0.2);
+  --color-black-a20: rgba(0, 0, 0, 0.2);
+  --color-black-a55: rgba(0, 0, 0, 0.55);
+  --color-pink-a04: rgba(255, 45, 122, 0.04);
+  --color-pink-a06: rgba(255, 45, 122, 0.06);
+  --color-pink-a10: rgba(255, 45, 122, 0.1);
+  --color-pink-a12: rgba(255, 45, 122, 0.12);
+  --color-pink-a14: rgba(255, 45, 122, 0.14);
+  --color-pink-a20: rgba(255, 45, 122, 0.2);
+  --color-pink-a22: rgba(255, 45, 122, 0.22);
+  --color-purple-a07: rgba(182, 109, 255, 0.07);
+  --color-purple-a10: rgba(182, 109, 255, 0.1);
+  --color-purple-a12: rgba(182, 109, 255, 0.12);
+  --color-purple-a14: rgba(182, 109, 255, 0.14);
+  --color-purple-a20: rgba(182, 109, 255, 0.2);
+  --color-purple-a30: rgba(182, 109, 255, 0.3);
+  --color-blue-a07: rgba(0, 180, 255, 0.07);
+  --color-blue-a11: rgba(0, 180, 255, 0.11);
+  --color-green-a11: rgba(0, 230, 118, 0.11);
+  --color-green-a12: rgba(0, 230, 118, 0.12);
+  --color-yellow-a11: rgba(255, 230, 0, 0.11);
+  --color-yellow-a12: rgba(255, 230, 0, 0.12);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --bg: #0a0a0a;
+  --card: #141414;
+  --card2: #1c1c1c;
+  --pink: #ff2d7a;
+  --green: #00e676;
+  --yellow: #ffe600;
+  --blue: #00b4ff;
+  --purple: #b66dff;
+  --muted: #555;
+  --sub: #999;
+  --border-color: #2a2a2a;
+  --r: 14px;
+  --r-sm: 8px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: #fff;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 99px;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+.pulse-animation {
+  animation: pulse-dot 1.5s infinite;
 }
