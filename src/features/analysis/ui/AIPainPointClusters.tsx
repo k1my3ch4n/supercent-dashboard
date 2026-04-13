@@ -1,3 +1,5 @@
+"use client";
+
 import Card from "@shared/ui/Card";
 import Badge from "@shared/ui/Badge";
 import { useState } from "react";
@@ -8,7 +10,6 @@ interface ClusterData {
   count: number;
   quote: string;
   keywords: string[];
-  badgeVariant: "pink" | "green" | "yellow" | "blue" | "purple";
 }
 
 const MOCK_CLUSTERS: ClusterData[] = [
@@ -18,7 +19,6 @@ const MOCK_CLUSTERS: ClusterData[] = [
     count: 1082,
     quote: '"게임은 재밌는데 광고가 너무 많아서 못하겠어요. 3판마다 광고가 나옵니다."',
     keywords: ["광고 과다", "리워드 없음", "강제 광고", "레벨 10-20"],
-    badgeVariant: "pink",
   },
   {
     icon: "⚠️",
@@ -26,7 +26,6 @@ const MOCK_CLUSTERS: ClusterData[] = [
     count: 473,
     quote: '"이벤트 던전 들어가면 100% 튕깁니다. 업데이트 후 계속 이러네요."',
     keywords: ["이벤트 던전", "앱 크래시", "데이터 손실", "긴급"],
-    badgeVariant: "yellow",
   },
   {
     icon: "💳",
@@ -34,7 +33,6 @@ const MOCK_CLUSTERS: ClusterData[] = [
     count: 318,
     quote: '"유료 아이템 가격 대비 효과가 너무 부족합니다. 과금 유도가 심해요."',
     keywords: ["과금 유도", "밸런스", "가격 정책", "P2W"],
-    badgeVariant: "blue",
   },
   {
     icon: "🌏",
@@ -42,7 +40,6 @@ const MOCK_CLUSTERS: ClusterData[] = [
     count: 201,
     quote: '"No response from CS for 3 weeks. Japanese players feel ignored."',
     keywords: ["CS 무응답", "번역 오류", "일본어", "독일어"],
-    badgeVariant: "purple",
   },
 ];
 

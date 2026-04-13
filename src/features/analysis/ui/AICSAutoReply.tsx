@@ -1,3 +1,5 @@
+"use client";
+
 import Card from "@shared/ui/Card";
 import Badge from "@shared/ui/Badge";
 import { useState } from "react";

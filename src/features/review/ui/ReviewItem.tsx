@@ -79,7 +79,7 @@ export default function ReviewItem({
           )}
           <span className="text-size-10 ml-auto flex-shrink-0 text-color-muted">{date}</span>
         </div>
-        <p className="text-size-12 leading-[1.5] text-color-text-weak">{text}</p>
+        <p className="text-size-12 leading-[1.5] text-color-weak">{text}</p>
       </div>
     </div>
   );
