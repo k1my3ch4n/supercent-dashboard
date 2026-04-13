@@ -7,10 +7,10 @@
 
 ## 스토어 구조 개요
 
-| 스토어 | 파일 위치 | 관리 대상 |
-|--------|-----------|-----------|
-| `useReviewStore` | `src/features/review/model/reviewStore.ts` | 크롤링된 리뷰 목록 |
-| `useAnalysisStore` | `src/features/analysis/model/analysisStore.ts` | AI 분석 결과 |
+| 스토어             | 파일 위치                                      | 관리 대상          |
+| ------------------ | ---------------------------------------------- | ------------------ |
+| `useReviewStore`   | `src/features/review/model/reviewStore.ts`     | 크롤링된 리뷰 목록 |
+| `useAnalysisStore` | `src/features/analysis/model/analysisStore.ts` | AI 분석 결과       |
 
 ---
 
@@ -38,9 +38,9 @@ fetchReviews(appId) 호출
 
 ```ts
 interface ReviewState {
-  reviews: Review[];       // 수집된 리뷰 목록
-  isLoading: boolean;      // API 요청 진행 중 여부
-  error: string | null;    // 에러 메시지 (정상 시 null)
+  reviews: Review[]; // 수집된 리뷰 목록
+  isLoading: boolean; // API 요청 진행 중 여부
+  error: string | null; // 에러 메시지 (정상 시 null)
   fetchReviews: (appId: string) => Promise<void>;
 }
 ```
@@ -49,33 +49,33 @@ interface ReviewState {
 
 ```ts
 interface Review {
-  id: string;        // 리뷰 고유 ID
-  userName: string;  // 작성자 이름
-  score: number;     // 평점 (1~5)
-  text: string;      // 리뷰 본문
-  date: string;      // ISO 8601 날짜 문자열
+  id: string; // 리뷰 고유 ID
+  userName: string; // 작성자 이름
+  score: number; // 평점 (1~5)
+  text: string; // 리뷰 본문
+  date: string; // ISO 8601 날짜 문자열
 }
 ```
 
 ### 사용 예시
 
 ```ts
-import { useReviewStore } from '@/features/review/model/reviewStore';
+import { useReviewStore } from "@features/review/model/reviewStore";
 
 const { reviews, isLoading, error, fetchReviews } = useReviewStore();
 
 // 리뷰 수집 시작
-fetchReviews('com.example.app');
+fetchReviews("com.example.app");
 ```
 
 ### 사용 시점
 
-| 상황 | 설명 |
-|------|------|
-| 사용자가 앱 ID를 입력하고 크롤링을 시작할 때 | `fetchReviews(appId)` 호출 |
-| 리뷰 목록 UI를 렌더링할 때 | `reviews` 배열을 읽어 목록 표시 |
-| 크롤링 진행 중 로딩 UI를 표시할 때 | `isLoading` 값으로 스피너 제어 |
-| 크롤링 실패 시 에러 메시지를 표시할 때 | `error` 값으로 에러 UI 표시 |
+| 상황                                         | 설명                            |
+| -------------------------------------------- | ------------------------------- |
+| 사용자가 앱 ID를 입력하고 크롤링을 시작할 때 | `fetchReviews(appId)` 호출      |
+| 리뷰 목록 UI를 렌더링할 때                   | `reviews` 배열을 읽어 목록 표시 |
+| 크롤링 진행 중 로딩 UI를 표시할 때           | `isLoading` 값으로 스피너 제어  |
+| 크롤링 실패 시 에러 메시지를 표시할 때       | `error` 값으로 에러 UI 표시     |
 
 ---
 
@@ -103,9 +103,9 @@ analyzeReviews(reviews) 호출
 
 ```ts
 interface AnalysisState {
-  result: AnalysisResult | null;  // 분석 결과 (분석 전 null)
-  isLoading: boolean;             // API 요청 진행 중 여부
-  error: string | null;           // 에러 메시지 (정상 시 null)
+  result: AnalysisResult | null; // 분석 결과 (분석 전 null)
+  isLoading: boolean; // API 요청 진행 중 여부
+  error: string | null; // 에러 메시지 (정상 시 null)
   analyzeReviews: (reviews: Review[]) => Promise<void>;
 }
 ```
@@ -114,37 +114,37 @@ interface AnalysisState {
 
 ```ts
 interface AnalysisResult {
-  sentimentScore: number;                    // 감성 점수 (0~100)
+  sentimentScore: number; // 감성 점수 (0~100)
   sentimentLabel: "긍정" | "부정" | "중립"; // 감성 레이블
-  categories: Category[];                    // 카테고리별 언급 통계
-  painPoints: PainPoint[];                   // 주요 페인 포인트
-  actionItems: ActionItem[];                 // 실행 가능한 액션 아이템
-  summary: string;                           // 전체 리뷰 요약
+  categories: Category[]; // 카테고리별 언급 통계
+  painPoints: PainPoint[]; // 주요 페인 포인트
+  actionItems: ActionItem[]; // 실행 가능한 액션 아이템
+  summary: string; // 전체 리뷰 요약
 }
 
 interface Category {
-  name: string;   // 카테고리명 (예: "버그", "UI/UX", "성능")
-  count: number;  // 해당 카테고리 언급 리뷰 수
+  name: string; // 카테고리명 (예: "버그", "UI/UX", "성능")
+  count: number; // 해당 카테고리 언급 리뷰 수
 }
 
 interface PainPoint {
-  title: string;                       // 페인 포인트 제목
-  description: string;                 // 구체적인 설명
+  title: string; // 페인 포인트 제목
+  description: string; // 구체적인 설명
   severity: "high" | "medium" | "low"; // 심각도
 }
 
 interface ActionItem {
-  title: string;                        // 액션 아이템 제목
-  description: string;                  // 구체적인 실행 방안
-  priority: "high" | "medium" | "low";  // 우선순위
+  title: string; // 액션 아이템 제목
+  description: string; // 구체적인 실행 방안
+  priority: "high" | "medium" | "low"; // 우선순위
 }
 ```
 
 ### 사용 예시
 
 ```ts
-import { useAnalysisStore } from '@/features/analysis/model/analysisStore';
-import { useReviewStore } from '@/features/review/model/reviewStore';
+import { useAnalysisStore } from "@features/analysis/model/analysisStore";
+import { useReviewStore } from "@features/review/model/reviewStore";
 
 const { reviews } = useReviewStore();
 const { result, isLoading, error, analyzeReviews } = useAnalysisStore();
@@ -155,14 +155,14 @@ analyzeReviews(reviews);
 
 ### 사용 시점
 
-| 상황 | 설명 |
-|------|------|
-| 리뷰 수집 완료 후 AI 분석을 시작할 때 | `analyzeReviews(reviews)` 호출 |
-| 감성 점수 차트를 렌더링할 때 | `result.sentimentScore` / `result.sentimentLabel` 사용 |
-| 페인 포인트 목록을 표시할 때 | `result.painPoints` 배열 사용 |
-| 액션 아이템 목록을 표시할 때 | `result.actionItems` 배열 사용 |
-| 분석 진행 중 로딩 UI를 표시할 때 | `isLoading` 값으로 스피너 제어 |
-| 분석 실패 시 에러 메시지를 표시할 때 | `error` 값으로 에러 UI 표시 |
+| 상황                                  | 설명                                                   |
+| ------------------------------------- | ------------------------------------------------------ |
+| 리뷰 수집 완료 후 AI 분석을 시작할 때 | `analyzeReviews(reviews)` 호출                         |
+| 감성 점수 차트를 렌더링할 때          | `result.sentimentScore` / `result.sentimentLabel` 사용 |
+| 페인 포인트 목록을 표시할 때          | `result.painPoints` 배열 사용                          |
+| 액션 아이템 목록을 표시할 때          | `result.actionItems` 배열 사용                         |
+| 분석 진행 중 로딩 UI를 표시할 때      | `isLoading` 값으로 스피너 제어                         |
+| 분석 실패 시 에러 메시지를 표시할 때  | `error` 값으로 에러 UI 표시                            |
 
 ---
 
