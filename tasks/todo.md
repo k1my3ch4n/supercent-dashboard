@@ -194,16 +194,17 @@
 
 ---
 
-## Phase 6: 페이지 구성
+## Phase 6: 페이지 라우팅 구성
 
-- [ ] `GameSelectPage` 구현 (`src/pages/game-select`)
-  - [ ] GameSelectWidget 렌더링
-  - [ ] 게임 클릭 → 라우팅 (`/dashboard/[gameId]`)
-- [ ] `DashboardPage` 구현 (`src/pages/dashboard`)
-  - [ ] Sidebar + Topbar + DashboardWidget 조합
-  - [ ] 스토어 전환 (StoreSelector) → 해당 스토어 데이터 fetch
-  - [ ] 크롤링 → AI 분석 플로우 연결
-- [ ] `SettingPage` 구현 (`src/pages/setting`)
+> 단일 페이지 `useState` 전환 방식 → Next.js App Router 동적 라우트로 전환
+
+- [x] `src/app/page.tsx` — useState 제거, `GameSelectWidget`만 렌더링
+- [x] `src/app/detail/[id]/page.tsx` — 동적 라우트 생성, `DashboardWidget` 렌더링
+- [x] `GameSelectWidget` — `onGameSelect` 콜백 제거, `router.push('/detail/:id')` 적용
+- [x] `DashboardWidget` — `onBack` prop 제거, `router.push('/')` 내부화
+- [x] `Sidebar` — `onGameChange` prop 제거, `router.push('/')` 내부화
+- [x] `Topbar` — `onBack` prop 제거, `router.push('/')` 내부화
+- [ ] `SettingPage` 구현 (`src/pages/setting`) — 추후
   - [ ] 게임 목록 관리 (추가 · 삭제 · 앱 ID 설정)
   - [ ] 크롤링 설정 (언어, 리뷰 수, 스케줄)
 
