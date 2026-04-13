@@ -64,7 +64,7 @@ export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
           </section>
 
           {/* AI 분석 4개 카드: 균등 2x2 그리드 */}
-          <section className="grid gap-4 grid-cols-1 md:grid-cols-2">
+          <section className="grid items-start gap-4 grid-cols-1 md:grid-cols-2">
             <section id="section-actions">
               <AIActionItemList />
             </section>

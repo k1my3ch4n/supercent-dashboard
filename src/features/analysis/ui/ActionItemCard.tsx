@@ -38,7 +38,7 @@ export default function ActionItemCard({ item }: ActionItemCardProps) {
 
   return (
     <div
-      className={`rounded-size-8 border overflow-hidden cursor-pointer transition-transform duration-100 hover:-translate-y-px bg-color-card-2 ${
+      className={`rounded-size-8 border cursor-pointer transition-colors duration-100 bg-color-card-2 ${
         isHovered ? "border-color-white-a12" : "border-border-color"
       }`}
       onMouseEnter={() => setIsHovered(true)}

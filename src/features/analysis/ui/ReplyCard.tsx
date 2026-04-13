@@ -31,7 +31,7 @@ export default function ReplyCard({ item, index }: ReplyCardProps) {
   const [isRegenerateHovered, setIsRegenerateHovered] = useState(false);
 
   return (
-    <div className="rounded-size-8 border overflow-hidden border-border-color">
+    <div className="rounded-size-8 border border-border-color">
       <div className="px-size-14 py-size-11 border-b bg-color-pink-a04 border-border-color">
         <div className="flex items-center justify-between mb-size-5">
           <div className="flex items-center gap-size-7">
