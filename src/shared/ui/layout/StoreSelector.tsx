@@ -1,11 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import type { ComponentType } from "react";
 import { useStoreFilterStore, StoreOption } from "@shared/model/storeFilterStore";
+import AppStoreIcon from "@shared/ui/icons/stores/AppStoreIcon";
+import GooglePlayIcon from "@shared/ui/icons/stores/GooglePlayIcon";
 
-const STORES: { key: StoreOption; label: string; icon: string; available: boolean }[] = [
-  { key: "google-play", label: "Google Play", icon: "🟢", available: true },
-  { key: "app-store", label: "App Store", icon: "🍎", available: false },
+const STORES: {
+  key: StoreOption;
+  label: string;
+  Icon: ComponentType<{ className?: string }>;
+  available: boolean;
+}[] = [
+  { key: "google-play", label: "Google Play", Icon: GooglePlayIcon, available: true },
+  { key: "app-store", label: "App Store", Icon: AppStoreIcon, available: false },
 ];
 
 export default function StoreSelector() {
@@ -34,7 +42,10 @@ export default function StoreSelector() {
           onMouseEnter={() => setHoveredStore(store.key)}
           onMouseLeave={() => setHoveredStore(null)}
         >
-          {store.icon} {store.label}
+          <span className="w-size-14 h-size-14 flex-shrink-0">
+            <store.Icon className="w-full h-full" />
+          </span>
+          {store.label}
           {!store.available && (
             <span className="text-size-9 font-bold px-size-5 py-px rounded-size-3 bg-color-white-a06 text-color-muted">
               SOON
