@@ -31,69 +31,68 @@ const MOCK_ANOMALIES: AnomalyItemData[] = [
   },
 ];
 
-const levelConfig: Record<AnomalyLevel, { bg: string; color: string; label: string }> = {
-  alert: { bg: "rgba(255,45,122,.14)", color: "var(--pink)", label: "ALERT" },
-  warn: { bg: "rgba(255,230,0,.11)", color: "var(--yellow)", label: "WARN" },
-  info: { bg: "rgba(0,180,255,.11)", color: "var(--blue)", label: "INFO" },
+const levelConfig: Record<
+  AnomalyLevel,
+  { bg: string; color: string; label: string; bgClass: string; textClass: string }
+> = {
+  alert: {
+    bg: "rgba(255,45,122,.14)",
+    color: "var(--pink)",
+    label: "ALERT",
+    bgClass: "bg-color-pink-a14",
+    textClass: "text-color-pink",
+  },
+  warn: {
+    bg: "rgba(255,230,0,.11)",
+    color: "var(--yellow)",
+    label: "WARN",
+    bgClass: "bg-color-yellow-a11",
+    textClass: "text-color-yellow",
+  },
+  info: {
+    bg: "rgba(0,180,255,.11)",
+    color: "var(--blue)",
+    label: "INFO",
+    bgClass: "bg-color-blue-a11",
+    textClass: "text-color-blue",
+  },
 };
 
 export default function AIPredictionPanel() {
   return (
     <Card>
-      <div
-        className="flex items-center justify-between px-[18px] py-[14px] border-b"
-        style={{ borderColor: "var(--border-color)" }}
-      >
+      <div className="flex items-center justify-between px-size-18 py-size-14 border-b border-border-color">
         <div>
-          <div className="text-[13px] font-extrabold">AI 예측 & 이상 탐지</div>
-          <div className="text-[10px] mt-0.5" style={{ color: "var(--sub)" }}>
+          <div className="text-size-13 font-extrabold">AI 예측 & 이상 탐지</div>
+          <div className="text-size-10 mt-0.5 text-color-sub">
             평점 예측 포캐스트 · 이상 신호 감지
           </div>
         </div>
         <Badge variant="blue">AI</Badge>
       </div>
-      <div className="px-[18px] py-[14px] flex flex-col gap-[14px]">
+      <div className="px-size-18 py-size-14 flex flex-col gap-size-14">
         {/* 평점 예측 포캐스트 */}
-        <div
-          className="flex items-center gap-3 p-[14px] rounded-[8px] border"
-          style={{ background: "var(--card2)", borderColor: "var(--border-color)" }}
-        >
+        <div className="flex items-center gap-3 p-size-14 rounded-size-8 border bg-color-card-2 border-border-color">
           <div>
-            <div
-              className="text-[10px] font-semibold tracking-[0.5px] mb-1"
-              style={{ color: "var(--sub)" }}
-            >
+            <div className="text-size-10 font-semibold tracking-xs mb-1 text-color-sub">
               현재 평점
             </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-[28px] font-black" style={{ color: "var(--yellow)" }}>
-                4.1
-              </span>
+              <span className="text-size-28 font-black text-color-yellow">4.1</span>
               <span className="text-base">→</span>
-              <span className="text-[22px] font-black" style={{ color: "var(--pink)" }}>
-                3.9
-              </span>
+              <span className="text-size-22 font-black text-color-pink">3.9</span>
             </div>
-            <div className="text-[10px] mt-[3px]" style={{ color: "var(--sub)" }}>
-              14일 후 예측
-            </div>
+            <div className="text-size-10 mt-size-3 text-color-sub">14일 후 예측</div>
           </div>
           <div className="ml-auto text-center">
-            <div className="text-[18px] font-extrabold" style={{ color: "var(--purple)" }}>
-              84%
-            </div>
-            <div className="text-[9px] uppercase tracking-[1px]" style={{ color: "var(--muted)" }}>
-              신뢰도
-            </div>
+            <div className="text-size-18 font-extrabold text-color-purple">84%</div>
+            <div className="text-size-9 uppercase tracking-sm text-color-muted">신뢰도</div>
           </div>
         </div>
 
         {/* 이상 탐지 목록 */}
         <div>
-          <div
-            className="text-[10px] font-bold tracking-[1px] uppercase mb-2"
-            style={{ color: "var(--muted)" }}
-          >
+          <div className="text-size-10 font-bold tracking-sm uppercase mb-2 text-color-muted">
             이상 탐지
           </div>
           <div className="flex flex-col gap-2">
@@ -102,17 +101,15 @@ export default function AIPredictionPanel() {
               return (
                 <div
                   key={index}
-                  className="flex items-start gap-[10px] px-3 py-[10px] rounded-[8px] border"
-                  style={{ background: "var(--card2)", borderColor: "var(--border-color)" }}
+                  className={`flex items-start gap-size-10 px-3 py-size-10 rounded-size-8 border bg-color-card-2 border-border-color`}
                 >
                   <span className="text-base flex-shrink-0 mt-px">{anomaly.icon}</span>
-                  <p className="text-[11px] leading-[1.5] flex-1" style={{ color: "#ccc" }}>
-                    <strong style={{ color: "#fff" }}>{anomaly.highlight}</strong>
+                  <p className="text-size-11 leading-[1.5] flex-1 text-color-soft">
+                    <strong className="text-white">{anomaly.highlight}</strong>
                     {anomaly.text}
                   </p>
                   <span
-                    className="text-[9px] font-bold px-[6px] py-0.5 rounded-[4px] flex-shrink-0 self-start"
-                    style={{ background: config.bg, color: config.color }}
+                    className={`text-size-9 font-bold px-size-6 py-0.5 rounded-size-4 flex-shrink-0 self-start ${config.bgClass} ${config.textClass}`}
                   >
                     {config.label}
                   </span>

@@ -24,25 +24,20 @@ export default function StatCard({
 
   return (
     <div
-      className="rounded-[14px] border flex flex-col gap-[7px] px-[18px] py-4"
-      style={{
-        background: "var(--card)",
-        borderColor: variant === "highlight" ? "var(--pink)" : "var(--border-color)",
-      }}
+      className={`rounded-size-14 border flex flex-col gap-size-7 px-size-18 py-4 bg-color-card ${
+        variant === "highlight" ? "border-color-pink" : "border-border-color"
+      }`}
     >
       <div className="flex items-center justify-between">
-        <span
-          className="text-[10px] font-bold tracking-[1px] uppercase"
-          style={{ color: "var(--sub)" }}
-        >
+        <span className="text-size-10 font-bold tracking-size-1 uppercase text-color-sub">
           {label}
         </span>
         <span className="text-base">{icon}</span>
       </div>
-      <div className="text-[30px] font-black leading-none" style={{ color: valueColor }}>
+      <div className="text-size-30 font-black leading-none" style={{ color: valueColor }}>
         {value}
       </div>
-      <div className="text-[11px]" style={{ color: "var(--sub)" }}>
+      <div className="text-size-11 text-color-sub">
         <span style={{ color: changeColor }}>{change}</span>
         {variant === "ai-predict" ? " 14일 후 예측 평점" : " vs last period"}
       </div>

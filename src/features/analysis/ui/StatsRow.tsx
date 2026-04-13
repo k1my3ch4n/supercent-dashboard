@@ -2,7 +2,7 @@ import StatCard from "./StatCard";
 
 export default function StatsRow() {
   return (
-    <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+    <div className="grid gap-size-3" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
       <StatCard
         label="Total Reviews"
         value="2,847"

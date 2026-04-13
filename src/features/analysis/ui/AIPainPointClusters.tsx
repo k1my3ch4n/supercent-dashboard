@@ -1,5 +1,6 @@
 import Card from "@shared/ui/Card";
 import Badge from "@shared/ui/Badge";
+import { useState } from "react";
 
 interface ClusterData {
   icon: string;
@@ -46,58 +47,44 @@ const MOCK_CLUSTERS: ClusterData[] = [
 ];
 
 export default function AIPainPointClusters() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
   return (
     <Card>
-      <div
-        className="flex items-center justify-between px-[18px] py-[14px] border-b"
-        style={{ borderColor: "var(--border-color)" }}
-      >
+      <div className="flex items-center justify-between px-size-18 py-size-14 border-b border-border-color">
         <div>
-          <div className="text-[13px] font-extrabold">AI 페인 포인트 클러스터</div>
-          <div className="text-[10px] mt-0.5" style={{ color: "var(--sub)" }}>
-            자동 클러스터링 · 핵심 이슈 분류
-          </div>
+          <div className="text-size-13 font-extrabold">AI 페인 포인트 클러스터</div>
+          <div className="text-size-10 mt-0.5 text-color-sub">자동 클러스터링 · 핵심 이슈 분류</div>
         </div>
         <Badge variant="purple">AI</Badge>
       </div>
-      <div className="px-[18px] py-[14px] flex flex-col gap-[10px]">
+      <div className="px-size-18 py-size-14 flex flex-col gap-size-10">
         {MOCK_CLUSTERS.map((cluster, index) => (
           <div
             key={index}
-            className="rounded-[8px] border px-[14px] py-3 cursor-pointer transition-colors duration-150"
-            style={{ background: "var(--card2)", borderColor: "var(--border-color)" }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,255,255,.15)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLDivElement).style.borderColor = "var(--border-color)";
-            }}
+            className={`rounded-size-8 border px-size-14 py-3 cursor-pointer transition-colors duration-150 bg-color-card-2 ${
+              hoveredIndex === index ? "border-color-white-a15" : "border-border-color"
+            }`}
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
           >
-            <div className="flex items-center justify-between mb-[6px]">
-              <div className="flex items-center gap-[6px] text-xs font-bold">
+            <div className="flex items-center justify-between mb-size-6">
+              <div className="flex items-center gap-size-6 text-xs font-bold">
                 <span>{cluster.icon}</span>
                 <span>{cluster.name}</span>
               </div>
-              <span className="text-[11px]" style={{ color: "var(--sub)" }}>
+              <span className="text-size-11 text-color-sub">
                 {cluster.count.toLocaleString()}개 리뷰
               </span>
             </div>
-            <div
-              className="text-[11px] leading-[1.5] italic pl-[10px] border-l-2 mb-[7px]"
-              style={{ color: "var(--sub)", borderColor: "var(--border-color)" }}
-            >
+            <div className="text-size-11 leading-[1.5] italic pl-size-10 border-l-2 border-border-color mb-size-7 text-color-sub">
               {cluster.quote}
             </div>
-            <div className="flex flex-wrap gap-[5px]">
+            <div className="flex flex-wrap gap-size-5">
               {cluster.keywords.map((keyword) => (
                 <span
                   key={keyword}
-                  className="text-[10px] px-[7px] py-0.5 rounded-full border"
-                  style={{
-                    background: "rgba(255,255,255,.05)",
-                    color: "var(--sub)",
-                    borderColor: "var(--border-color)",
-                  }}
+                  className="text-size-10 px-size-7 py-0.5 rounded-full border bg-color-white-a05 text-color-sub border-border-color"
                 >
                   {keyword}
                 </span>
