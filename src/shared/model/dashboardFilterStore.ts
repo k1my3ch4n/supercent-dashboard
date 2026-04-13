@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export type Period = "7D" | "30D" | "90D";
-export type StoreOption = "google-play" | "app-store" | "galaxy-store";
+export type StoreOption = "google-play" | "app-store";
 
 interface DashboardFilterState {
   activePeriod: Period;

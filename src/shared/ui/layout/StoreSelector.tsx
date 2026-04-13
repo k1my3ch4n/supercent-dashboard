@@ -3,12 +3,9 @@
 import { useState } from "react";
 import { useDashboardFilterStore, StoreOption } from "@shared/model/dashboardFilterStore";
 
-export type { StoreOption };
-
 const STORES: { key: StoreOption; label: string; icon: string; available: boolean }[] = [
   { key: "google-play", label: "Google Play", icon: "🟢", available: true },
   { key: "app-store", label: "App Store", icon: "🍎", available: false },
-  { key: "galaxy-store", label: "Galaxy Store", icon: "🌐", available: false },
 ];
 
 export default function StoreSelector() {

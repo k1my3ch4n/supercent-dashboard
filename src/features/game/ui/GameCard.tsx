@@ -1,28 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import StoreBadge from "@shared/ui/StoreBadge";
-import { Game } from "@features/game/model/mockGames";
-import { ALL_STORES } from "@shared/constants/stores";
+import { Game } from "@features/game/model/games";
 
 interface GameCardProps {
   game: Game;
-  onClick: (gameId: string) => void;
+  onSelect: () => void;
 }
 
-export default function GameCard({ game, onClick }: GameCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
+export default function GameCard({ game, onSelect }: GameCardProps) {
   return (
     <div
-      className={`rounded-size-14 overflow-hidden cursor-pointer border flex flex-col transition-all duration-[180ms] hover:-translate-y-1 bg-color-card ${
-        isHovered ? "border-color-white-a18 shadow-lg" : "border-border-color shadow-none"
-      }`}
-      onClick={() => {
-        onClick(game.id);
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="rounded-size-14 overflow-hidden cursor-pointer border border-border-color flex flex-col transition-all duration-[180ms] hover:-translate-y-1 hover:border-color-white-a18 hover:shadow-lg shadow-none bg-color-card"
+      onClick={onSelect}
     >
       <div
         className="w-full relative flex items-center justify-center text-size-64 aspect-[4/3]"
@@ -36,8 +26,8 @@ export default function GameCard({ game, onClick }: GameCardProps) {
           {game.name}
         </span>
         <div className="flex gap-1 flex-shrink-0">
-          {ALL_STORES.map((store) => (
-            <StoreBadge key={store} store={store} active={game.stores.includes(store)} />
+          {game.stores.map((store) => (
+            <StoreBadge key={store} store={store} />
           ))}
         </div>
       </div>
