@@ -64,3 +64,4 @@ src/
 ## 스킬 목록
 
 - pull-request
+- design-prototype
