@@ -21,11 +21,16 @@
 `fetchReviews(appId)` 액션이 호출되면 `/api/crawling?appId=...` 엔드포인트에 GET 요청을 보내고, 응답 결과를 `reviews` 상태에 저장합니다.  
 요청 시작 시 `isLoading`이 `true`로 전환되며, 완료 또는 실패 시 `false`로 돌아옵니다.
 
+이전 요청이 진행 중인 상태에서 `fetchReviews`가 다시 호출되면 `AbortController`를 통해 이전 요청을 즉시 취소하고 새 요청을 시작합니다. 취소된 요청은 에러 상태를 변경하지 않습니다.
+
 ```
 fetchReviews(appId) 호출
+  → 진행 중인 요청이 있으면 abort() 호출로 취소
+  → 새 AbortController 생성
   → isLoading: true
   → GET /api/crawling?appId={appId}
   → 성공: reviews에 결과 저장, isLoading: false
+  → 취소(AbortError): 상태 변경 없이 종료
   → 실패: error에 메시지 저장, isLoading: false
 ```
 
@@ -81,11 +86,16 @@ fetchReviews('com.example.app');
 `analyzeReviews(reviews)` 액션이 호출되면 `/api/analyze` 엔드포인트에 POST 요청을 보내고, 응답 결과를 `result` 상태에 저장합니다.  
 요청 시작 시 `isLoading`이 `true`로 전환되며, 완료 또는 실패 시 `false`로 돌아옵니다.
 
+이전 요청이 진행 중인 상태에서 `analyzeReviews`가 다시 호출되면 `AbortController`를 통해 이전 요청을 즉시 취소하고 새 요청을 시작합니다. 취소된 요청은 에러 상태를 변경하지 않습니다.
+
 ```
 analyzeReviews(reviews) 호출
+  → 진행 중인 요청이 있으면 abort() 호출로 취소
+  → 새 AbortController 생성
   → isLoading: true
   → POST /api/analyze { reviews }
   → 성공: result에 분석 결과 저장, isLoading: false
+  → 취소(AbortError): 상태 변경 없이 종료
   → 실패: error에 메시지 저장, isLoading: false
 ```
 
@@ -164,11 +174,11 @@ analyzeReviews(reviews);
 [사용자] 앱 ID 입력
     ↓
 useReviewStore.fetchReviews(appId)
-    ↓
+    ↓ (진행 중 재호출 시 → 이전 요청 abort 후 재시작)
 [리뷰 목록 수집 완료 → reviews 상태에 저장]
     ↓
 useAnalysisStore.analyzeReviews(reviews)
-    ↓
+    ↓ (진행 중 재호출 시 → 이전 요청 abort 후 재시작)
 [AI 분석 완료 → result 상태에 저장]
     ↓
 [대시보드에 감성 점수 / 페인 포인트 / 액션 아이템 표시]
