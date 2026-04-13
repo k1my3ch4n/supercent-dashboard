@@ -40,7 +40,7 @@ export default function StatCard({
       <div className={`text-size-30 font-black leading-none ${valueColorClass}`}>{value}</div>
       <div className="text-size-11 text-color-sub">
         <span className={CHANGE_COLOR_CLASS[changeType]}>{change}</span>
-        {variant === "ai-predict" ? " 14일 후 예측 평점" : " vs last period"}
+        {variant === "ai-predict" ? " 14일 후 예측 평점" : " 최근 리뷰 기준"}
       </div>
     </div>
   );

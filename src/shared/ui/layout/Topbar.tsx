@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useDashboardFilterStore, Period } from "@shared/model/dashboardFilterStore";
-
-export type { Period };
 
 interface TopbarProps {
   gameName: string;
@@ -12,10 +9,7 @@ interface TopbarProps {
   isAnalyzing?: boolean;
 }
 
-const PERIODS: Period[] = ["7D", "30D", "90D"];
-
 export default function Topbar({ gameName, onBack, onRunAI, isAnalyzing = false }: TopbarProps) {
-  const { activePeriod, setPeriod } = useDashboardFilterStore();
   const [isBackHovered, setIsBackHovered] = useState(false);
 
   return (
@@ -42,21 +36,6 @@ export default function Topbar({ gameName, onBack, onRunAI, isAnalyzing = false 
 
       {/* 오른쪽 */}
       <div className="flex items-center gap-2">
-        <div className="flex gap-px rounded-size-8 p-size-3 bg-color-card-2">
-          {PERIODS.map((period) => (
-            <button
-              key={period}
-              className={`text-size-11 font-semibold px-size-11 py-size-5 rounded-size-6 cursor-pointer border-none transition-all duration-100 ${
-                activePeriod === period
-                  ? "bg-color-card text-white"
-                  : "bg-transparent text-color-sub"
-              }`}
-              onClick={() => setPeriod(period)}
-            >
-              {period}
-            </button>
-          ))}
-        </div>
         <button
           className="flex items-center gap-size-6 text-white border-none rounded-size-8 px-size-14 py-2 text-xs font-bold cursor-pointer transition-opacity duration-150 disabled:opacity-40 disabled:cursor-not-allowed bg-color-pink"
           onClick={onRunAI}

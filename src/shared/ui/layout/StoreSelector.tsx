@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useDashboardFilterStore, StoreOption } from "@shared/model/dashboardFilterStore";
+import { useStoreFilterStore, StoreOption } from "@shared/model/storeFilterStore";
 
 const STORES: { key: StoreOption; label: string; icon: string; available: boolean }[] = [
   { key: "google-play", label: "Google Play", icon: "🟢", available: true },
@@ -9,7 +9,7 @@ const STORES: { key: StoreOption; label: string; icon: string; available: boolea
 ];
 
 export default function StoreSelector() {
-  const { activeStore, setStore } = useDashboardFilterStore();
+  const { activeStore, setStore } = useStoreFilterStore();
   const [hoveredStore, setHoveredStore] = useState<StoreOption | null>(null);
 
   return (
