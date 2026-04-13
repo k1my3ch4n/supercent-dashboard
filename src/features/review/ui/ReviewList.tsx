@@ -23,18 +23,24 @@ export default function ReviewList() {
   }
 
   return (
-    <Card>
-      <div className="flex items-center justify-between px-size-18 py-size-14 border-b border-border-color">
-        <div>
-          <div className="text-size-13 font-extrabold">최근 리뷰</div>
-          <div className="text-size-10 mt-0.5 text-color-sub">실시간 수집 · Google Play</div>
-        </div>
-        {reviews.length > 0 && (
-          <span className="text-size-10 font-bold px-2 py-0.5 rounded-full bg-color-pink-a14 text-color-pink">
-            {reviews.length}개
-          </span>
-        )}
-      </div>
+    <Card
+      title="최근 리뷰"
+      subtitle="실시간 수집 · Google Play"
+      badgeVariant="pink"
+      badgeText={reviews.length > 0 ? `${reviews.length}개` : "0개"}
+      footer={
+        !isLoading && !error && hasMore ? (
+          <div className="px-size-18 py-size-14 border-t border-border-color">
+            <button
+              onClick={handleLoadMore}
+              className="w-full text-size-11 font-bold text-color-sub hover:text-white transition-colors py-1"
+            >
+              더보기 ({reviews.length - visibleCount}개 남음)
+            </button>
+          </div>
+        ) : undefined
+      }
+    >
       <div>
         {isLoading && (
           <div className="flex justify-center py-8">
@@ -63,16 +69,6 @@ export default function ReviewList() {
               avatarColor={AVATAR_COLORS[index % AVATAR_COLORS.length]}
             />
           ))}
-        {!isLoading && !error && hasMore && (
-          <div className="px-size-18 py-size-14 border-t border-border-color">
-            <button
-              onClick={handleLoadMore}
-              className="w-full text-size-11 font-bold text-color-sub hover:text-white transition-colors py-1"
-            >
-              더보기 ({reviews.length - visibleCount}개 남음)
-            </button>
-          </div>
-        )}
       </div>
     </Card>
   );
