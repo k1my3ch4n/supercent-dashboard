@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { Review } from "@/shared/types/review";
-import { AnalysisResult, AnalysisSuccessResponse } from "@/shared/types/analysis";
+import { Review } from "@shared/types/review";
+import { AnalysisResult, AnalysisSuccessResponse } from "@shared/types/analysis";
 
 let analysisAbortController: AbortController | null = null;
 

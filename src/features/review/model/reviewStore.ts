@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Review, CrawlingSuccessResponse } from "@/shared/types/review";
+import { Review, CrawlingSuccessResponse } from "@shared/types/review";
 
 let reviewAbortController: AbortController | null = null;
 

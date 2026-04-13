@@ -1,6 +1,6 @@
 import googlePlay from "google-play-scraper";
 import type { NextRequest } from "next/server";
-import type { Review } from "@/shared/types/review";
+import type { Review } from "@shared/types/review";
 
 const MIN_REVIEW_COUNT = 1;
 const MAX_REVIEW_COUNT = 5000;
