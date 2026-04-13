@@ -11,7 +11,7 @@ interface GameSelectWidgetProps {
 export default function GameSelectWidget({ onGameSelect }: GameSelectWidgetProps) {
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 
-  const handleAddClick = () => {
+  const handleAddGame = () => {
     alert("게임 추가는 Settings에서 설정할 수 있습니다.");
   };
 
@@ -29,7 +29,7 @@ export default function GameSelectWidget({ onGameSelect }: GameSelectWidgetProps
               ? "border-color-pink text-color-pink"
               : "border-border-color text-color-sub"
           }`}
-          onClick={handleAddClick}
+          onClick={handleAddGame}
           onMouseEnter={() => setIsButtonHovered(true)}
           onMouseLeave={() => setIsButtonHovered(false)}
         >
@@ -38,7 +38,7 @@ export default function GameSelectWidget({ onGameSelect }: GameSelectWidgetProps
       </header>
 
       {/* 게임 그리드 */}
-      <GameGrid games={MOCK_GAMES} onGameClick={onGameSelect} onAddClick={handleAddClick} />
+      <GameGrid games={MOCK_GAMES} onGameClick={onGameSelect} onAddClick={handleAddGame} />
     </div>
   );
 }
