@@ -61,7 +61,18 @@ src/
   - `if (a) { return b }` ✅
 - 삼항 연산자는 허용하지만, 중첩은 금지
 
+### 시멘틱 태그 설정
+
+- <div> , <p> 등을 그냥 사용하는게 아닌, 시멘틱 태그를 적극적으로 사용한다.
+- 예시
+
+```
+<article>, <aside> <details> <header> <footer> <main> <nav> <section> 등
+```
+
 ## 스킬 목록
 
 - pull-request
 - design-prototype
+- refactoring
+- staging
