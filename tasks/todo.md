@@ -126,6 +126,52 @@
 
 ---
 
+## Phase 5-CSS: Tailwind 토큰 통합 (var() → className 변환)
+
+> globals.css 에 정의된 @theme 토큰을 모든 컴포넌트에서 inline style이 아닌 className으로 활용
+
+### 작업 범위
+
+- ✅ 총 22개 파일 변환 완료
+- ✅ inline style에서 color/background/borderColor를 className으로 이동
+- ✅ config objects 내 색상 참조를 color 토큰 className으로 변환
+- ✅ 이벤트 핸들러의 직접 style 조작 → state + className 기반 리팩토링
+
+### 작업 파일 목록
+
+#### Shared UI (11개)
+
+- [x] `shared/ui/Card.tsx` — bg-color-card, border-border-color ✅
+- [x] `shared/ui/Badge.tsx` — config 색상 → className 분리 ✅
+- [x] `shared/ui/PriorityTag.tsx` — config 색상 → className 분리 ✅
+- [x] `shared/ui/ErrorMessage.tsx` — inline style 제거 ✅
+- [x] `shared/ui/LoadingSpinner.tsx` — spinner 색상, text 색상 ✅
+- [x] `shared/ui/ProgressBar.tsx` — color prop → className ✅
+- [x] `shared/ui/StoreBadge.tsx` — inline color/borderColor ✅
+- [x] `shared/ui/layout/Sidebar.tsx` — 여러 inline style + 이벤트 핸들러 ✅
+- [x] `shared/ui/layout/Topbar.tsx` — 여러 inline style + 이벤트 핸들러 ✅
+- [x] `shared/ui/layout/StoreSelector.tsx` — style + 이벤트 핸들러 ✅
+
+#### Features (11개)
+
+- [x] `features/review/ui/ReviewItem.tsx` — color 객체 + inline style ✅
+- [x] `features/review/ui/ReviewList.tsx` — inline style ✅
+- [x] `features/game/ui/GameCard.tsx` — config 객체 style ✅
+- [x] `features/game/ui/GameCardAdd.tsx` — 이벤트 핸들러 리팩토링 ✅
+- [x] `features/analysis/ui/AIActionItemList.tsx` — config 색상 + 이벤트 핸들러 ✅
+- [x] `features/analysis/ui/AIPainPointClusters.tsx` — inline style + 이벤트 핸들러 ✅
+- [x] `features/analysis/ui/AIPredictionPanel.tsx` — config 색상 + inline style ✅
+- [x] `features/analysis/ui/AICSAutoReply.tsx` — 여러 style + 이벤트 핸들러 ✅
+- [x] `features/analysis/ui/AISummaryBlock.tsx` — config colorVar + inline style ✅
+- [ ] `features/analysis/ui/StatCard.tsx` — 삼항 연산자 color + inline style ✅ (완료이미 표시됨)
+- [ ] `features/analysis/ui/StatsRow.tsx` — valueColor prop ✅ (완료이미 표시됨)
+
+#### Widgets (1개)
+
+- [x] `widgets/GameSelectWidget.tsx` — 이벤트 핸들러 리팩토링 ✅
+
+---
+
 ## Phase 6: 페이지 구성
 
 - [ ] `GameSelectPage` 구현 (`src/pages/game-select`)
