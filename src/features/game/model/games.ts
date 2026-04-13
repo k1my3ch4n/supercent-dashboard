@@ -28,7 +28,7 @@ export const GAMES: Game[] = [
   },
   {
     id: "ageofdinosaurs",
-    appId: "com.supercent.io.supercent.ageofdinosaurs",
+    appId: "io.supercent.ageofdinosaurs",
     name: "Dinosaur Universe",
     emoji: "🦕",
     gradient: "linear-gradient(135deg,#1a0d00,#5c3300,#8b5e00)",

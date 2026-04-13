@@ -1,41 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import StoreSelector from "@shared/ui/layout/StoreSelector";
+import type { Game } from "@features/game/model/games";
 
 interface TopbarProps {
-  gameName: string;
-  onBack: () => void;
+  games: Game[];
+  currentGameId: string;
+  onGoMain: () => void;
+  onSelectGame: (gameId: string) => void;
   onRunAI: () => void;
   isAnalyzing?: boolean;
 }
 
-export default function Topbar({ gameName, onBack, onRunAI, isAnalyzing = false }: TopbarProps) {
-  const [isBackHovered, setIsBackHovered] = useState(false);
-
+export default function Topbar({
+  games,
+  currentGameId,
+  onGoMain,
+  onSelectGame,
+  onRunAI,
+  isAnalyzing = false,
+}: TopbarProps) {
   return (
     <div className="flex items-center justify-between px-7 h-14 border-b border-border-color sticky top-0 z-[5] bg-black">
       {/* 왼쪽 */}
       <div className="flex items-center gap-3">
         <button
-          className={`flex items-center gap-1 px-size-10 py-size-5 rounded-size-8 border text-xs cursor-pointer transition-all duration-100 ${
-            isBackHovered
-              ? "text-white border-color-white-a20"
-              : "text-color-sub border-border-color"
-          }`}
-          onClick={onBack}
-          onMouseEnter={() => setIsBackHovered(true)}
-          onMouseLeave={() => setIsBackHovered(false)}
+          className="bg-transparent border-0 p-0 text-left cursor-pointer"
+          onClick={onGoMain}
+          aria-label="메인으로 이동"
         >
-          ← 목록
+          <div className="text-size-18 font-black tracking-widest">SUPERCENT</div>
+          <div className="text-size-10 tracking-md mt-0.5 text-color-pink">Review Intelligence</div>
         </button>
-        <div>
-          <div className="text-base font-extrabold">{gameName}</div>
-          <div className="text-size-11 mt-0.5 text-color-sub">AI Review Intelligence Dashboard</div>
-        </div>
+
+        <nav className="flex items-center gap-2" aria-label="게임 바로가기">
+          {games.map((game) => (
+            <button
+              key={game.id}
+              className={`w-size-30 h-size-30 rounded-size-7 border text-base cursor-pointer transition-all duration-150 ${
+                game.id === currentGameId
+                  ? "border-color-pink bg-color-pink-a10 ring-2 ring-color-pink shadow-[0_0_14px_rgba(255,45,122,0.35)] scale-105"
+                  : "border-border-color bg-color-card-2 hover:border-color-white-a20"
+              }`}
+              onClick={() => onSelectGame(game.id)}
+              aria-label={`${game.name}로 이동`}
+              aria-current={game.id === currentGameId ? "page" : undefined}
+              title={game.name}
+            >
+              {game.emoji}
+            </button>
+          ))}
+        </nav>
       </div>
 
-      {/* 오른쪽 */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
+        <StoreSelector />
         <button
           className="flex items-center gap-size-6 text-white border-none rounded-size-8 px-size-14 py-2 text-xs font-bold cursor-pointer transition-opacity duration-150 disabled:opacity-40 disabled:cursor-not-allowed bg-color-pink"
           onClick={onRunAI}

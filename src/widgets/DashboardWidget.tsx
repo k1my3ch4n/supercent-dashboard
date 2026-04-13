@@ -2,9 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "@shared/ui/layout/Sidebar";
 import Topbar from "@shared/ui/layout/Topbar";
-import StoreSelector from "@shared/ui/layout/StoreSelector";
 import AISummaryBlock from "@features/analysis/ui/AISummaryBlock";
 import StatsRow from "@features/analysis/ui/StatsRow";
 import AIActionItemList from "@features/analysis/ui/AIActionItemList";
@@ -34,46 +32,57 @@ export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
     fetchReviews(game.appId);
   }, [game.appId, fetchReviews]);
 
-  const handleBack = () => {
+  const handleGoMain = () => {
     router.push("/");
+  };
+
+  const handleSelectGame = (selectedGameId: string) => {
+    router.push(`/detail/${selectedGameId}`);
   };
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar game={game} onGameChange={handleBack} />
-
-      <main className="flex flex-col flex-1 ml-[210px]">
+      <main className="flex flex-col flex-1">
         <Topbar
-          gameName={game.name}
-          onBack={handleBack}
+          games={games}
+          currentGameId={game.id}
+          onGoMain={handleGoMain}
+          onSelectGame={handleSelectGame}
           onRunAI={runAnalysis}
           isAnalyzing={isAnalyzing}
         />
 
         <div className="flex flex-col gap-size-18 px-7 py-size-22">
-          {/* 스토어 선택 */}
-          <StoreSelector />
-
           {/* AI 요약 */}
-          <AISummaryBlock />
+          <section id="section-insights">
+            <AISummaryBlock />
+          </section>
 
           {/* 통계 카드 */}
-          <StatsRow />
+          <section id="section-dashboard">
+            <StatsRow />
+          </section>
 
           {/* 메인 그리드: 액션 아이템 + 클러스터 */}
-          <div className="grid gap-4 grid-cols-[1.1fr_0.9fr]">
+          <section id="section-actions" className="grid gap-4 grid-cols-[1.1fr_0.9fr]">
             <AIActionItemList />
             <AIPainPointClusters />
-          </div>
+          </section>
 
           {/* 하단 그리드: CS 자동 답변 + 예측 패널 */}
           <div className="grid gap-4 grid-cols-2">
-            <AICSAutoReply />
-            <AIPredictionPanel />
+            <section id="section-cs-reply">
+              <AICSAutoReply />
+            </section>
+            <section id="section-predictions">
+              <AIPredictionPanel />
+            </section>
           </div>
 
           {/* 리뷰 목록 */}
-          <ReviewList />
+          <section id="section-reviews">
+            <ReviewList />
+          </section>
         </div>
       </main>
     </div>

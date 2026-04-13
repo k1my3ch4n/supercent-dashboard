@@ -53,7 +53,7 @@
 
 - [x] `Card` — 기본 카드 래퍼 (border, radius, overflow)
 - [x] `Badge` — 색상 variant (pink · green · yellow · blue · purple)
-- [x] `StoreBadge` — 스토어별 아이콘 뱃지 (Google Play · App Store · Galaxy Store, on/off 상태)
+- [x] `StoreBadge` — 스토어별 아이콘 뱃지 (Google Play · App Store, SVG 컴포넌트)
 - [x] `LoadingSpinner` — AI 분석 실행 중 표시
 - [x] `ErrorMessage` — API 오류 표시
 - [x] `ProgressBar` — AI 임팩트 바, 카테고리 비중 바 공용
@@ -64,10 +64,10 @@
 ### 5-2. 게임 선택 화면 (`src/features/game/ui`)
 
 - [x] `GameCard` — 게임 썸네일(그라디언트+이모지) + 이름 + StoreBadge 목록
-  - props: `name`, `emoji`, `gradient`, `stores[]`
+  - props: `game`, `onSelect` (클릭 핸들러 부모 바인딩)
   - 클릭 시 대시보드로 이동
-- [x] `GameCardAdd` — 점선 "게임 추가" 카드 (빈 슬롯)
-- [x] `GameGrid` — 4열 그리드, GameCard 목록 렌더링
+- [x] `GameCardAdd` — 사용하지 않아 제거
+- [x] `GameGrid` — 반응형 그리드 (모바일 1열 · 태블릿 2열 · 데스크탑 3열)
 
 ---
 
@@ -75,7 +75,7 @@
 
 - [x] `Sidebar` — 로고 · 게임 스위처(클릭 시 선택 화면 복귀) · 네비게이션 · 푸터
 - [x] `Topbar` — 뒤로가기 · 게임명 · 기간 탭(7D/30D/90D) · AI 분석 실행 버튼
-- [x] `StoreSelector` — Google Play · App Store · Galaxy Store 칩 (SOON 상태 지원)
+- [x] `StoreSelector` — Google Play · App Store 칩 (SOON 상태 지원)
 
 ---
 
@@ -157,14 +157,14 @@
 - [x] `features/review/ui/ReviewItem.tsx` — color 객체 + inline style ✅
 - [x] `features/review/ui/ReviewList.tsx` — inline style ✅
 - [x] `features/game/ui/GameCard.tsx` — config 객체 style ✅
-- [x] `features/game/ui/GameCardAdd.tsx` — 이벤트 핸들러 리팩토링 ✅
+- [x] `features/game/ui/GameCardAdd.tsx` — 사용하지 않아 제거 ✅
 - [x] `features/analysis/ui/AIActionItemList.tsx` — config 색상 + 이벤트 핸들러 ✅
 - [x] `features/analysis/ui/AIPainPointClusters.tsx` — inline style + 이벤트 핸들러 ✅
 - [x] `features/analysis/ui/AIPredictionPanel.tsx` — config 색상 + inline style ✅
 - [x] `features/analysis/ui/AICSAutoReply.tsx` — 여러 style + 이벤트 핸들러 ✅
 - [x] `features/analysis/ui/AISummaryBlock.tsx` — config colorVar + inline style ✅
-- [ ] `features/analysis/ui/StatCard.tsx` — 삼항 연산자 color + inline style ✅ (완료이미 표시됨)
-- [ ] `features/analysis/ui/StatsRow.tsx` — valueColor prop ✅ (완료이미 표시됨)
+- [x] `features/analysis/ui/StatCard.tsx` — 삼항 연산자 color + inline style ✅
+- [x] `features/analysis/ui/StatsRow.tsx` — valueColor prop ✅
 
 #### Widgets (1개)
 
@@ -201,36 +201,91 @@
 - [x] `src/app/page.tsx` — useState 제거, `GameSelectWidget`만 렌더링
 - [x] `src/app/detail/[id]/page.tsx` — 동적 라우트 생성, `DashboardWidget` 렌더링
 - [x] `GameSelectWidget` — `onGameSelect` 콜백 제거, `router.push('/detail/:id')` 적용
-- [x] `DashboardWidget` — `onBack` prop 제거, `router.push('/')` 내부화
-- [x] `Sidebar` — `onGameChange` prop 제거, `router.push('/')` 내부화
-- [x] `Topbar` — `onBack` prop 제거, `router.push('/')` 내부화
+- [x] `DashboardWidget` — `Topbar` 네비게이션 콜백(`onGoMain`, `onSelectGame`) 전달 및 라우팅 내부화
+- [x] `Sidebar` — `onGameChange` prop 제거 및 `router.push('/')` 내부화 (현재 대시보드 UI에서는 제거됨)
+- [x] `Topbar` — 로고 클릭 메인 이동 + 게임 아이콘 클릭 상세 이동 (`router.push`) 구조로 전환
+- [x] `Topbar` 기간 탭(7D/30D/90D) 제거 및 날짜 필터 스토어 분리 (`storeFilterStore`)
 - [ ] `SettingPage` 구현 (`src/pages/setting`) — 추후
   - [ ] 게임 목록 관리 (추가 · 삭제 · 앱 ID 설정)
   - [ ] 크롤링 설정 (언어, 리뷰 수, 스케줄)
 
 ---
 
-## 추후 검토 항목 (Phase 5 → 실데이터 연동)
+## 실 데이터 연동 완료 항목
 
-> Phase 5에서 목 데이터로 구현된 항목들. Phase 6 이후 실데이터로 교체 필요.
+- [x] **게임 목록 스토어 구현** (`src/features/game/model/gameStore.ts`)
+  - `GAMES` + Zustand `useGameStore` 기반으로 교체 완료
+  - `Game` 타입에 `appId` 필드 추가 (각 게임별 Google Play 패키지명)
+  - `mockGames.ts` → `games.ts` 파일명 정리 완료
+  - ⚠️ `games.ts`의 각 `appId` 값을 실제 Google Play 패키지명으로 교체 필요
+  - 게임 추가/삭제 UI 제거 (내부 툴이므로 코드 직접 수정)
 
-- [ ] **게임 목록 스토어 구현** (`src/features/game/model/gameStore.ts`)
-  - 현재 `MOCK_GAMES` 하드코딩 → Zustand 스토어로 교체
-  - Settings에서 게임 추가/삭제/앱ID 설정 연동
+- [x] **스토어 정책 정리**
+  - Galaxy Store 지원 제거 (타입/필터/셀렉터/아이콘 반영)
+  - 현재 지원 스토어: Google Play, App Store
 
-- [ ] **AnalysisResult 타입 확장** (`src/shared/types/analysis.ts`)
-  - `AIPainPointClusters`용: `clusterName`, `reviewCount`, `quote`, `keywords`
-  - `AICSAutoReply`용: 부정 리뷰 + AI 초안 텍스트 (다국어)
-  - `AIPredictionPanel`용: 예측 평점, 이상 탐지 목록 (ALERT/WARN/INFO)
-  - `AISummaryBlock`용: Health Score, Positive %, Alerts count
-  - Gemini 프롬프트도 함께 수정 필요
+- [x] **AnalysisResult 타입 확장** (`src/shared/types/analysis.ts`)
+  - `insights: string[]` — Gemini 종합 인사이트 5개
+  - `clusters: ClusterItem[]` — 페인 포인트 클러스터 (name, count, quote, keywords)
+  - `positivePercent: number` — 긍정 리뷰 비율
+  - `ActionItem` 확장: `reviewCount`, `targetSegment`, `timeline`, `impactLabel`, `impactPercent`, `confidence`
+  - `prediction`, `anomalies`, `csReplies` 필드 확장
+  - Gemini 프롬프트 및 검증 로직 함께 수정 완료
 
-- [ ] **Review 타입 확장** (`src/shared/types/review.ts`)
-  - `country` 필드 추가 → ReviewItem에 국가 표시
-  - `sentimentTag` 필드 추가
+- [x] **Review 타입 확장** (`src/shared/types/review.ts`)
+  - `country?: string` 추가 (크롤링 시 `lang` 값으로 설정)
+  - `sentimentTag?: string` 추가 (선택적 필드)
 
-- [ ] **목 데이터 제거** — 실 API 연동 후 각 컴포넌트에서 props로 받도록 변경
-  - `AISummaryBlock`, `AIActionItemList`, `AIPainPointClusters`, `AICSAutoReply`, `AIPredictionPanel`, `StatsRow`, `ReviewList`
+- [x] **목 데이터 제거 — 실 API 연동 완료**
+  - `AISummaryBlock` ✅ — `useAnalysisStore` 연결, healthScore/alertsCount 클라이언트 계산
+  - `AIActionItemList` ✅ — `useAnalysisStore` 연결
+  - `AIPainPointClusters` ✅ — `useAnalysisStore` 연결
+  - `ReviewList` ✅ — `useReviewStore` 연결, 대시보드 진입 시 자동 fetch
+
+- [x] **E2E 플로우 연결**
+  - 대시보드 진입 시 `game.appId`로 리뷰 자동 fetch (`useEffect`)
+  - "AI 분석 실행" 클릭 시 리뷰 재fetch → Gemini 분석 순차 실행 (`useRunAnalysis`)
+
+## 추후 검토 항목 (미결)
+
+- [x] **AICSAutoReply 실 데이터 연동**
+  - 데이터 출처: analyze API `csReplies`
+  - `ReplyCard`를 독립 컴포넌트로 분리 완료 (`src/features/analysis/ui/ReplyCard.tsx`)
+
+- [x] **AIPredictionPanel 실 데이터 연동**
+  - 데이터 출처: analyze API `prediction`, `anomalies`
+
+- [x] **StatsRow 실 데이터 연동 (1차)**
+  - 1차 우선순위: **크롤링 데이터 기반 연동 완료**
+    - `Collected Reviews` = `reviews.length`
+
+---
+
+## UI 조정 (2026-04-14)
+
+- [x] 대시보드 사이드바 제거 (`src/widgets/DashboardWidget.tsx`)
+- [x] 헤더를 메인 로고 중심으로 단순화하고, 로고 클릭 시 메인(`/`) 이동 연결 (`src/shared/ui/layout/Topbar.tsx`)
+- [x] `StoreSelector` + `AI 분석 실행` 버튼을 헤더 우측으로 이동 (`src/shared/ui/layout/Topbar.tsx`)
+- [x] 헤더에 전체 게임 아이콘 퀵 네비게이션 추가 (`src/shared/ui/layout/Topbar.tsx`)
+  - 현재 게임 포함 전체 아이콘 노출
+  - 아이콘 클릭 시 해당 상세(`/detail/[id]`)로 즉시 이동
+  - 현재 게임 아이콘 강조(핑크 테두리 + 링 + 글로우 + scale)
+
+- [x] `DashboardWidget` 헤더 연동 정리 (`src/widgets/DashboardWidget.tsx`)
+  - `games`, `currentGameId`, `onGoMain`, `onSelectGame` 전달
+  - 본문 상단의 중복 `StoreSelector` 제거
+
+- [x] 통계 카드 실데이터 반영/안정화 (`src/features/analysis/ui/StatsRow.tsx`)
+  - `Avg Rating` = `reviews.score` 평균
+  - `Response Queue` = 저평점(1~2점) 건수 + 비율(%) — Low Rating Rate + Needs Reply 통합
+  - `Recent 7D Reviews` = 수집 리뷰 중 최신 시점 기준 7일 이내 건수
+  - 지표 안정화: 크롤링 샘플 기준 문구로 통일, `AI Predicted` 카드는 StatsRow에서 제거
+
+- [x] **StatCard UI 레이아웃 개선**
+  - 기준 라벨(`최근 리뷰 기준` / `14일 후 예측`)을 카드 우상단으로 이동
+  - 아이콘 `sr-only` 처리
+  - 숫자 + description을 `mt-auto`로 묶어 카드 하단에 고정 → 카드 간 높이 일치
+  - `gap-size-6`으로 숫자와 설명 밀착
 
 ---
 
@@ -240,9 +295,6 @@
   - [ ] `GET /api/crawling/app-store` 라우트 구현 (앱 ID 숫자 형태, e.g. `553834731`)
   - [ ] 타입 정의 추가 (`src/shared/types/review.ts`)
   - [ ] StoreSelector `App Store` 칩 활성화
-- [ ] Galaxy Store 크롤링 추가
-  - [ ] `GET /api/crawling/galaxy-store` 라우트 구현
-  - [ ] StoreSelector `Galaxy Store` 칩 활성화
 - [ ] 멀티 스토어 비교 분석 (Gemini에 복수 스토어 데이터 전달)
 
 ---

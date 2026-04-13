@@ -22,7 +22,6 @@ export default function StoreSelector() {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-size-11 font-semibold mr-1 text-color-muted">스토어</span>
       {STORES.map((store) => (
         <button
           key={store.key}
