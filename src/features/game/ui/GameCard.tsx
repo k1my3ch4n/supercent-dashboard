@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import StoreBadge from "@shared/ui/StoreBadge";
-import { Game, ALL_STORES } from "@features/game/model/mockGames";
+import { Game } from "@features/game/model/mockGames";
+import { ALL_STORES } from "@shared/constants/stores";
 
 interface GameCardProps {
   game: Game;

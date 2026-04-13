@@ -45,5 +45,3 @@ export const MOCK_GAMES: Game[] = [
     stores: ["google-play", "app-store"],
   },
 ];
-
-export const ALL_STORES: StoreType[] = ["google-play", "app-store", "galaxy-store"];

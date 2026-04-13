@@ -1,18 +1,15 @@
 const MOCK_INSIGHTS = [
   {
     icon: "🔴",
-    html: '<strong>광고 빈도 과다</strong>가 전체 부정 리뷰의 <span class="hl-red">38%</span>를 차지합니다. 특히 레벨 10-20 구간에서 집중 발생 중입니다.',
     text: "광고 빈도 과다가 전체 부정 리뷰의 38%를 차지합니다. 특히 레벨 10-20 구간에서 집중 발생 중입니다.",
   },
   {
     icon: "⚠️",
     text: "이벤트 던전 크래시 버그가 신규 감지됐습니다. 지난 48시간 내 147건 급증 — 즉각 대응이 필요합니다.",
-    highlight: { pattern: "147건", color: "var(--pink)" },
   },
   {
     icon: "✅",
     text: "결제 관련 불만이 전주 대비 23% 감소했습니다. 지난 업데이트의 결제 플로우 개선이 효과를 보이고 있습니다.",
-    highlight: { pattern: "23% 감소", color: "var(--green)" },
   },
   {
     icon: "📊",

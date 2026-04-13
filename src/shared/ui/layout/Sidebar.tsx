@@ -57,13 +57,14 @@ export default function Sidebar({ game, onGameChange }: SidebarProps) {
 
       {/* 게임 스위처 */}
       <div className="px-3 py-size-14 border-b border-border-color">
-        <div
-          className={`flex items-center gap-size-10 px-size-10 py-size-9 rounded-size-8 border cursor-pointer transition-colors duration-150 ${
+        <button
+          className={`w-full flex items-center gap-size-10 px-size-10 py-size-9 rounded-size-8 border cursor-pointer transition-colors duration-150 bg-transparent focus:outline-none focus:ring-2 focus:ring-color-pink focus:ring-offset-2 focus:ring-offset-color-card ${
             isSwitcherHovered ? "border-color-pink" : "border-border-color"
           }`}
           onClick={onGameChange}
           onMouseEnter={() => setIsSwitcherHovered(true)}
           onMouseLeave={() => setIsSwitcherHovered(false)}
+          aria-label={`${game.name} 게임 변경`}
         >
           <div
             className="w-size-30 h-size-30 rounded-size-7 flex items-center justify-center text-size-17 flex-shrink-0"
@@ -76,7 +77,7 @@ export default function Sidebar({ game, onGameChange }: SidebarProps) {
             <div className="text-size-10 mt-0.5 text-color-muted">클릭하여 변경</div>
           </div>
           <span className="text-size-11 text-color-muted">⇄</span>
-        </div>
+        </button>
       </div>
 
       {/* 네비게이션 */}
@@ -87,9 +88,9 @@ export default function Sidebar({ game, onGameChange }: SidebarProps) {
               {section.title}
             </div>
             {section.items.map((item: NavItem) => (
-              <div
+              <button
                 key={item.key}
-                className={`flex items-center gap-size-9 px-size-10 py-size-9 rounded-size-8 text-sm cursor-pointer transition-all duration-100 ${
+                className={`w-full flex items-center gap-size-9 px-size-10 py-size-9 rounded-size-8 text-sm cursor-pointer transition-all duration-100 bg-transparent border-0 focus:outline-none focus:ring-2 focus:ring-color-pink focus:ring-offset-2 focus:ring-offset-color-card ${
                   activeNav === item.key
                     ? "bg-color-pink text-white font-bold"
                     : hoveredNavKey === item.key
@@ -99,10 +100,12 @@ export default function Sidebar({ game, onGameChange }: SidebarProps) {
                 onClick={() => setActiveNav(item.key)}
                 onMouseEnter={() => setHoveredNavKey(item.key)}
                 onMouseLeave={() => setHoveredNavKey(null)}
+                aria-label={item.label}
+                aria-current={activeNav === item.key ? "page" : undefined}
               >
                 <span>{item.icon}</span>
                 <span>{item.label}</span>
-              </div>
+              </button>
             ))}
           </div>
         ))}
