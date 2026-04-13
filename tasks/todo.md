@@ -31,14 +31,14 @@
 
 ---
 
-## Phase 4: 상태 관리 (Zustand)
+## Phase 4: 상태 관리 (Zustand) ✅
 
-- [ ] 리뷰 스토어 구현 (`src/features/review/model/reviewStore.ts`)
-  - [ ] 리뷰 데이터, 로딩 상태, 에러 상태
-  - [ ] `fetchReviews(appId)` 액션
-- [ ] 분석 스토어 구현 (`src/features/analysis/model/analysisStore.ts`)
-  - [ ] 분석 결과, 로딩 상태, 에러 상태
-  - [ ] `analyzeReviews(reviews)` 액션
+- [x] 리뷰 스토어 구현 (`src/features/review/model/reviewStore.ts`)
+  - [x] 리뷰 데이터, 로딩 상태, 에러 상태
+  - [x] `fetchReviews(appId)` 액션
+- [x] 분석 스토어 구현 (`src/features/analysis/model/analysisStore.ts`)
+  - [x] 분석 결과, 로딩 상태, 에러 상태
+  - [x] `analyzeReviews(reviews)` 액션
 
 ---
 
