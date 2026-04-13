@@ -1,18 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import GameGrid from "@features/game/ui/GameGrid";
 import { MOCK_GAMES } from "@features/game/model/mockGames";
 
-interface GameSelectWidgetProps {
-  onGameSelect: (gameId: string) => void;
-}
-
-export default function GameSelectWidget({ onGameSelect }: GameSelectWidgetProps) {
+export default function GameSelectWidget() {
+  const router = useRouter();
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   const handleAddGame = () => {
     alert("게임 추가는 Settings에서 설정할 수 있습니다.");
+  };
+
+  const handleGameClick = (gameId: string) => {
+    router.push(`/detail/${gameId}`);
   };
 
   return (
@@ -38,7 +40,7 @@ export default function GameSelectWidget({ onGameSelect }: GameSelectWidgetProps
       </header>
 
       {/* 게임 그리드 */}
-      <GameGrid games={MOCK_GAMES} onGameClick={onGameSelect} onAddClick={handleAddGame} />
+      <GameGrid games={MOCK_GAMES} onGameClick={handleGameClick} onAddClick={handleAddGame} />
     </div>
   );
 }

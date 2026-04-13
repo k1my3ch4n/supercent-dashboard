@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Sidebar from "@shared/ui/layout/Sidebar";
 import Topbar from "@shared/ui/layout/Topbar";
 import StoreSelector from "@shared/ui/layout/StoreSelector";
@@ -14,21 +15,26 @@ import { MOCK_GAMES } from "@features/game/model/mockGames";
 
 interface DashboardWidgetProps {
   gameId: string;
-  onBack: () => void;
 }
 
-export default function DashboardWidget({ gameId, onBack }: DashboardWidgetProps) {
+export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
+  const router = useRouter();
   const game = MOCK_GAMES.find((game) => game.id === gameId) ?? MOCK_GAMES[0];
+
   const { isAnalyzing, runAnalysis } = useRunAnalysis();
+
+  const handleBack = () => {
+    router.push("/");
+  };
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar game={game} onGameChange={onBack} />
+      <Sidebar game={game} onGameChange={handleBack} />
 
       <main className="flex flex-col flex-1 ml-[210px]">
         <Topbar
           gameName={game.name}
-          onBack={onBack}
+          onBack={handleBack}
           onRunAI={runAnalysis}
           isAnalyzing={isAnalyzing}
         />
