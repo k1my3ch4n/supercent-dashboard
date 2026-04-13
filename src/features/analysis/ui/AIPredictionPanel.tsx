@@ -1,7 +1,6 @@
 "use client";
 
 import Card from "@shared/ui/Card";
-import Badge from "@shared/ui/Badge";
 import LoadingSpinner from "@shared/ui/LoadingSpinner";
 import { useAnalysisStore } from "@features/analysis/model/analysisStore";
 import type { AnomalyItem } from "@shared/types/analysis";
@@ -36,30 +35,27 @@ export default function AIPredictionPanel() {
   const { result, isLoading } = useAnalysisStore();
 
   return (
-    <Card>
-      <div className="flex items-center justify-between px-size-18 py-size-14 border-b border-border-color">
-        <div>
-          <div className="text-size-13 font-extrabold">AI 예측 & 이상 탐지</div>
-          <div className="text-size-10 mt-0.5 text-color-sub">
-            평점 예측 포캐스트 · 이상 신호 감지
-          </div>
-        </div>
-        <Badge variant="blue">AI</Badge>
-      </div>
-      <div className="px-size-18 py-size-14 flex flex-col gap-size-14">
+    <Card
+      className="h-[460px] flex flex-col"
+      title="AI 예측 & 이상 탐지"
+      subtitle="평점 예측 포캐스트 · 이상 신호 감지"
+      badgeVariant="blue"
+    >
+      <div className="px-size-18 py-size-14 flex-1 min-h-0 overflow-y-auto flex flex-col gap-size-14">
         {isLoading && (
-          <div className="flex justify-center py-8">
+          <div className="flex-1 flex items-center justify-center">
             <LoadingSpinner />
           </div>
         )}
         {!isLoading && !result && (
-          <p className="text-size-12 text-color-muted py-8 text-center">
-            분석 결과가 없습니다. AI 분석을 실행하세요.
-          </p>
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-size-12 text-color-muted text-center">
+              분석 결과가 없습니다. AI 분석을 실행하세요.
+            </p>
+          </div>
         )}
         {!isLoading && result && (
           <>
-            {/* 평점 예측 포캐스트 */}
             <div className="flex items-center gap-3 p-size-14 rounded-size-8 border bg-color-card-2 border-border-color">
               <div>
                 <div className="text-size-10 font-semibold tracking-xs mb-1 text-color-sub">
@@ -84,7 +80,6 @@ export default function AIPredictionPanel() {
               </div>
             </div>
 
-            {/* 이상 탐지 목록 */}
             <div>
               <div className="text-size-10 font-bold tracking-sm uppercase mb-2 text-color-muted">
                 이상 탐지
@@ -98,7 +93,7 @@ export default function AIPredictionPanel() {
                   return (
                     <div
                       key={index}
-                      className={`flex items-start gap-size-10 px-3 py-size-10 rounded-size-8 border bg-color-card-2 border-border-color`}
+                      className="flex items-start gap-size-10 px-3 py-size-10 rounded-size-8 border bg-color-card-2 border-border-color"
                     >
                       <span className="text-base flex-shrink-0 mt-px">
                         {anomalyIcon[anomaly.level]}
