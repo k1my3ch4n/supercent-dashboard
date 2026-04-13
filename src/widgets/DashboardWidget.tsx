@@ -63,21 +63,21 @@ export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
             <StatsRow />
           </section>
 
-          {/* 메인 그리드: 액션 아이템 + 클러스터 */}
-          <section id="section-actions" className="grid gap-4 grid-cols-[1.1fr_0.9fr]">
-            <AIActionItemList />
-            <AIPainPointClusters />
-          </section>
-
-          {/* 하단 그리드: CS 자동 답변 + 예측 패널 */}
-          <div className="grid gap-4 grid-cols-2">
+          {/* AI 분석 4개 카드: 균등 2x2 그리드 */}
+          <section className="grid gap-4 grid-cols-1 md:grid-cols-2">
+            <section id="section-actions">
+              <AIActionItemList />
+            </section>
+            <section>
+              <AIPainPointClusters />
+            </section>
             <section id="section-cs-reply">
               <AICSAutoReply />
             </section>
             <section id="section-predictions">
               <AIPredictionPanel />
             </section>
-          </div>
+          </section>
 
           {/* 리뷰 목록 */}
           <section id="section-reviews">

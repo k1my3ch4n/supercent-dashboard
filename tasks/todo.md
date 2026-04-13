@@ -287,6 +287,22 @@
   - 숫자 + description을 `mt-auto`로 묶어 카드 하단에 고정 → 카드 간 높이 일치
   - `gap-size-6`으로 숫자와 설명 밀착
 
+- [x] AI 분석 섹션 카드 높이 통일 (`src/features/analysis/ui/*`)
+  - 대상: `AIActionItemList`, `AIPainPointClusters`, `AICSAutoReply`, `AIPredictionPanel`
+  - 카드 외곽 높이 고정(`h-[460px]`) 및 본문 영역 내부 스크롤 처리(`overflow-y-auto`)
+
+- [x] AI 분석 4개 카드 균등 배치 (`src/widgets/DashboardWidget.tsx`)
+  - 액션 아이템 ~ 예측 패널을 단일 2x2 그리드로 통일 (`grid-cols-1 md:grid-cols-2`)
+  - 카드 간 간격/정렬 규칙을 동일하게 유지
+
+- [x] 카드 내부 아이템 컴포넌트 분리 (`src/features/analysis/ui/ActionItemCard.tsx`, `src/features/analysis/ui/ClusterCard.tsx`)
+  - `ActionItemCard`, `ClusterCard`를 리스트 컴포넌트에서 분리하여 모듈화
+  - `AnalysisPanelCard` 제거 후 각 패널에서 직접 레이아웃/상태 렌더링
+
+- [x] `Card` 공용 헤더 props 도입 (`src/shared/ui/Card.tsx`)
+  - `title`, `subtitle`, `badgeVariant` 기반으로 헤더를 Card 내부에서 렌더링
+  - 분석 패널 4개의 중복 헤더 마크업 제거
+
 ---
 
 ## 추후 검토 항목 (스토어 확장)
