@@ -40,12 +40,7 @@ const MOCK_SCORES: Array<{ value: string; label: string; color: ScoreColor }> = 
 
 export default function AISummaryBlock() {
   return (
-    <div
-      className="rounded-size-14 border p-5 grid gap-5 bg-gradient-to-br from-color-pink-a09 via-color-purple-a07 to-color-blue-a07 border-color-pink-a22"
-      style={{
-        gridTemplateColumns: "1fr auto",
-      }}
-    >
+    <div className="rounded-size-14 border p-5 grid gap-5 grid-cols-[1fr_auto] bg-gradient-to-br from-color-pink-a09 via-color-purple-a07 to-color-blue-a07 border-color-pink-a22">
       {/* 왼쪽: 인사이트 목록 */}
       <div>
         <div className="flex items-center gap-size-6 text-size-9 font-bold tracking-md uppercase mb-size-10 text-color-pink">

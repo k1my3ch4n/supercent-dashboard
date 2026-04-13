@@ -2,14 +2,14 @@ import StatCard from "./StatCard";
 
 export default function StatsRow() {
   return (
-    <div className="grid gap-size-3" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+    <div className="grid gap-size-3 grid-cols-4">
       <StatCard
         label="Total Reviews"
         value="2,847"
         icon="💬"
         change="↑ 12.4%"
         changeType="up"
-        valueColor="var(--pink)"
+        valueColorClass="text-color-pink"
         variant="highlight"
       />
       <StatCard
@@ -18,7 +18,7 @@ export default function StatsRow() {
         icon="⭐"
         change="↓ 0.2"
         changeType="down"
-        valueColor="var(--yellow)"
+        valueColorClass="text-color-yellow"
       />
       <StatCard
         label="AI Predicted"
@@ -26,7 +26,7 @@ export default function StatsRow() {
         icon="🔮"
         change=""
         changeType="neutral"
-        valueColor="var(--blue)"
+        valueColorClass="text-color-blue"
         variant="ai-predict"
       />
       <StatCard
@@ -35,7 +35,7 @@ export default function StatsRow() {
         icon="🚨"
         change="+3"
         changeType="down"
-        valueColor="var(--pink)"
+        valueColorClass="text-color-pink"
       />
     </div>
   );

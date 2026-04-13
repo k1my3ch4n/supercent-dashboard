@@ -6,9 +6,15 @@ interface StatCardProps {
   icon: string;
   change: string;
   changeType: "up" | "down" | "neutral";
-  valueColor?: string;
+  valueColorClass?: string;
   variant?: StatVariant;
 }
+
+const CHANGE_COLOR_CLASS: Record<"up" | "down" | "neutral", string> = {
+  up: "text-color-green",
+  down: "text-color-pink",
+  neutral: "text-color-sub",
+};
 
 export default function StatCard({
   label,
@@ -16,12 +22,9 @@ export default function StatCard({
   icon,
   change,
   changeType,
-  valueColor = "#fff",
+  valueColorClass = "text-white",
   variant = "default",
 }: StatCardProps) {
-  const changeColor =
-    changeType === "up" ? "var(--green)" : changeType === "down" ? "var(--pink)" : "var(--sub)";
-
   return (
     <div
       className={`rounded-size-14 border flex flex-col gap-size-7 px-size-18 py-4 bg-color-card ${
@@ -34,11 +37,9 @@ export default function StatCard({
         </span>
         <span className="text-base">{icon}</span>
       </div>
-      <div className="text-size-30 font-black leading-none" style={{ color: valueColor }}>
-        {value}
-      </div>
+      <div className={`text-size-30 font-black leading-none ${valueColorClass}`}>{value}</div>
       <div className="text-size-11 text-color-sub">
-        <span style={{ color: changeColor }}>{change}</span>
+        <span className={CHANGE_COLOR_CLASS[changeType]}>{change}</span>
         {variant === "ai-predict" ? " 14일 후 예측 평점" : " vs last period"}
       </div>
     </div>

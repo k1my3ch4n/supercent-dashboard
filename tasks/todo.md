@@ -172,6 +172,28 @@
 
 ---
 
+## Phase 5-Refactor: Widgets 비즈니스 로직 → Features 분리
+
+> widgets 레이어에 혼재된 비즈니스 로직을 FSD 원칙에 따라 features로 이동
+
+- [x] `features/game/model/useGame.ts` 생성
+  - `gameId`로 게임 객체를 조회하는 hook
+  - `DashboardWidget`의 `MOCK_GAMES.find(...)` + 폴백 로직 이동
+- [x] `features/analysis/model/useRunAnalysis.ts` 생성
+  - AI 분석 실행 + `isAnalyzing` 상태를 캡슐화하는 hook
+  - `DashboardWidget`의 `handleRunAI` + `isAnalyzing` 상태 이동
+  - `useAnalysisStore`의 `isLoading` 을 `isAnalyzing`으로 노출
+- [x] `features/game/model/useGameActions.ts` 생성
+  - 게임 추가 액션을 캡슐화하는 hook
+  - `GameSelectWidget`의 `handleAddClick` 로직 이동
+- [x] `DashboardWidget.tsx` 리팩토링
+  - `useGame`, `useRunAnalysis` hook으로 교체
+  - 불필요한 import 제거
+- [x] `GameSelectWidget.tsx` 리팩토링
+  - `useGameActions` hook으로 교체
+
+---
+
 ## Phase 6: 페이지 구성
 
 - [ ] `GameSelectPage` 구현 (`src/pages/game-select`)

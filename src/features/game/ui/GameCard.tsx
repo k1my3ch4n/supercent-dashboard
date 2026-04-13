@@ -24,20 +24,14 @@ export default function GameCard({ game, onClick }: GameCardProps) {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className="w-full relative flex items-center justify-center text-size-64"
-        style={{ aspectRatio: "4/3", background: game.gradient }}
+        className="w-full relative flex items-center justify-center text-size-64 aspect-[4/3]"
+        style={{ background: game.gradient }}
       >
-        <span style={{ zIndex: 1 }}>{game.emoji}</span>
-        <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(to bottom, transparent 50%, rgba(0,0,0,.55))" }}
-        />
+        <span className="z-[1]">{game.emoji}</span>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent from-50% to-black/55" />
       </div>
       <div className="px-size-15 py-size-13 flex items-center justify-between">
-        <span
-          className="text-sm font-extrabold whitespace-nowrap overflow-hidden text-ellipsis"
-          style={{ maxWidth: "calc(100% - 80px)" }}
-        >
+        <span className="text-sm font-extrabold whitespace-nowrap overflow-hidden text-ellipsis max-w-[calc(100%-80px)]">
           {game.name}
         </span>
         <div className="flex gap-1 flex-shrink-0">

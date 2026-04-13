@@ -10,10 +10,7 @@ interface GameGridProps {
 
 export default function GameGrid({ games, onGameClick, onAddClick }: GameGridProps) {
   return (
-    <div
-      className="grid gap-size-14 px-10 pb-10 pt-9"
-      style={{ gridTemplateColumns: "repeat(4, 1fr)" }}
-    >
+    <div className="grid gap-size-14 px-10 pb-10 pt-9 grid-cols-4">
       {games.map((game) => (
         <GameCard key={game.id} game={game} onClick={onGameClick} />
       ))}
