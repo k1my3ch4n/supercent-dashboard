@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useDashboardFilterStore, Period } from "@shared/model/dashboardFilterStore";
 
-export type Period = "7D" | "30D" | "90D";
+export type { Period };
 
 interface TopbarProps {
   gameName: string;
-  activePeriod: Period;
-  onPeriodChange: (period: Period) => void;
   onBack: () => void;
   onRunAI: () => void;
   isAnalyzing?: boolean;
@@ -15,15 +14,10 @@ interface TopbarProps {
 
 const PERIODS: Period[] = ["7D", "30D", "90D"];
 
-export default function Topbar({
-  gameName,
-  activePeriod,
-  onPeriodChange,
-  onBack,
-  onRunAI,
-  isAnalyzing = false,
-}: TopbarProps) {
+export default function Topbar({ gameName, onBack, onRunAI, isAnalyzing = false }: TopbarProps) {
+  const { activePeriod, setPeriod } = useDashboardFilterStore();
   const [isBackHovered, setIsBackHovered] = useState(false);
+
   return (
     <div className="flex items-center justify-between px-7 h-14 border-b border-border-color sticky top-0 z-[5] bg-black">
       {/* 왼쪽 */}
@@ -57,9 +51,7 @@ export default function Topbar({
                   ? "bg-color-card text-white"
                   : "bg-transparent text-color-sub"
               }`}
-              onClick={() => {
-                onPeriodChange(period);
-              }}
+              onClick={() => setPeriod(period)}
             >
               {period}
             </button>

@@ -31,23 +31,19 @@ const NAV_SECTIONS = [
   },
 ];
 
+interface GameInfo {
+  name: string;
+  emoji: string;
+  gradient: string;
+}
+
 interface SidebarProps {
-  gameName: string;
-  gameEmoji: string;
-  gameGradient: string;
-  activeNav?: string;
-  onNavChange?: (key: string) => void;
+  game: GameInfo;
   onGameChange?: () => void;
 }
 
-export default function Sidebar({
-  gameName,
-  gameEmoji,
-  gameGradient,
-  activeNav = "dashboard",
-  onNavChange,
-  onGameChange,
-}: SidebarProps) {
+export default function Sidebar({ game, onGameChange }: SidebarProps) {
+  const [activeNav, setActiveNav] = useState("dashboard");
   const [isSwitcherHovered, setIsSwitcherHovered] = useState(false);
   const [hoveredNavKey, setHoveredNavKey] = useState<string | null>(null);
 
@@ -71,12 +67,12 @@ export default function Sidebar({
         >
           <div
             className="w-size-30 h-size-30 rounded-size-7 flex items-center justify-center text-size-17 flex-shrink-0"
-            style={{ background: gameGradient }}
+            style={{ background: game.gradient }}
           >
-            {gameEmoji}
+            {game.emoji}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-bold truncate">{gameName}</div>
+            <div className="text-xs font-bold truncate">{game.name}</div>
             <div className="text-size-10 mt-0.5 text-color-muted">클릭하여 변경</div>
           </div>
           <span className="text-size-11 text-color-muted">⇄</span>
@@ -100,9 +96,7 @@ export default function Sidebar({
                       ? "bg-color-card-2 text-white"
                       : "text-color-sub"
                 }`}
-                onClick={() => {
-                  onNavChange?.(item.key);
-                }}
+                onClick={() => setActiveNav(item.key)}
                 onMouseEnter={() => setHoveredNavKey(item.key)}
                 onMouseLeave={() => setHoveredNavKey(null)}
               >
