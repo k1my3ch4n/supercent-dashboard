@@ -1,9 +1,27 @@
 import googlePlay from "google-play-scraper";
+import { cacheLife } from "next/cache";
 import type { NextRequest } from "next/server";
 import type { Review } from "@shared/types/review";
 
 const MIN_REVIEW_COUNT = 1;
 const MAX_REVIEW_COUNT = 5000;
+
+async function fetchReviews(appId: string, lang: string, num: number): Promise<Review[]> {
+  "use cache";
+  cacheLife("hours");
+
+  const result = await googlePlay.reviews({ appId, lang, num });
+  const rawReviews = Array.isArray(result) ? result : result.data;
+
+  return rawReviews.map((review) => ({
+    id: review.id,
+    userName: review.userName,
+    score: review.score,
+    text: review.text,
+    date: review.date instanceof Date ? review.date.toISOString() : String(review.date),
+    country: lang,
+  }));
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -23,18 +41,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const result = await googlePlay.reviews({ appId, lang, num });
-    const rawReviews = Array.isArray(result) ? result : result.data;
-
-    const reviews: Review[] = rawReviews.map((review) => ({
-      id: review.id,
-      userName: review.userName,
-      score: review.score,
-      text: review.text,
-      date: review.date instanceof Date ? review.date.toISOString() : String(review.date),
-      country: lang,
-    }));
-
+    const reviews = await fetchReviews(appId, lang, num);
     return Response.json({ reviews, total: reviews.length, appId, lang });
   } catch (error) {
     const isNotFound =
