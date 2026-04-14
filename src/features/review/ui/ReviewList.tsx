@@ -1,88 +1,78 @@
+"use client";
+
+import { useState } from "react";
 import Card from "@shared/ui/Card";
+import LoadingSpinner from "@shared/ui/LoadingSpinner";
+import ErrorMessage from "@shared/ui/ErrorMessage";
 import ReviewItem from "./ReviewItem";
+import { useReviewStore } from "@features/review/model/reviewStore";
 
-const MOCK_REVIEWS = [
-  {
-    id: "1",
-    userName: "GameLover_KR",
-    score: 2,
-    text: "게임은 재밌는데 광고가 너무 많아요. 3판마다 광고가 나옵니다. 제발 줄여주세요.",
-    date: "1시간 전",
-    avatarColor: "#3d0060",
-    category: "광고",
-    isNew: true,
-  },
-  {
-    id: "2",
-    userName: "CrashVictim99",
-    score: 1,
-    text: "The event dungeon crashes every time I enter. Lost 3 days of progress. This is unacceptable.",
-    date: "2시간 전",
-    avatarColor: "#7a1a00",
-    category: "버그",
-    isNew: true,
-  },
-  {
-    id: "3",
-    userName: "HappyPlayer22",
-    score: 5,
-    text: "최신 업데이트로 결제 버그 고쳐줘서 감사해요! 이제 훨씬 쾌적하게 즐기고 있습니다.",
-    date: "3시간 전",
-    avatarColor: "#005530",
-    category: "결제",
-  },
-  {
-    id: "4",
-    userName: "Tanaka_JP",
-    score: 2,
-    text: "ゲームはいいですが、広告が多すぎて遊べません。課金しても改善されないのはひどいです。",
-    date: "5시간 전",
-    avatarColor: "#00102a",
-    category: "광고",
-  },
-  {
-    id: "5",
-    userName: "StarPlayer",
-    score: 4,
-    text: "전반적으로 재미있는 게임입니다. 다만 광고 빈도가 조금 조정되면 더 좋을 것 같아요.",
-    date: "7시간 전",
-    avatarColor: "#2a0500",
-    category: "광고",
-  },
-];
+const AVATAR_COLORS = ["#3d0060", "#7a1a00", "#005530", "#00102a", "#2a0500", "#003070", "#5c3300"];
 
-interface ReviewListProps {
-  newCount?: number;
-}
+const PAGE_SIZE = 10;
 
-export default function ReviewList({ newCount = 2 }: ReviewListProps) {
+export default function ReviewList() {
+  const { reviews, isLoading, error } = useReviewStore();
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const displayedReviews = reviews.slice(0, visibleCount);
+  const hasMore = visibleCount < reviews.length;
+
+  function handleLoadMore() {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  }
+
   return (
-    <Card>
-      <div className="flex items-center justify-between px-size-18 py-size-14 border-b border-border-color">
-        <div>
-          <div className="text-size-13 font-extrabold">최근 리뷰</div>
-          <div className="text-size-10 mt-0.5 text-color-sub">실시간 수집 · Google Play</div>
-        </div>
-        {newCount > 0 && (
-          <span className="text-size-10 font-bold px-2 py-0.5 rounded-full bg-color-pink-a14 text-color-pink">
-            NEW {newCount}
-          </span>
+    <Card
+      title="최근 리뷰"
+      subtitle="실시간 수집 · Google Play"
+      badgeVariant="pink"
+      badgeText={reviews.length > 0 ? `${reviews.length}개` : "0개"}
+      footer={
+        !isLoading && !error && hasMore ? (
+          <div className="px-size-18 py-size-14 border-t border-border-color">
+            <button
+              onClick={handleLoadMore}
+              className="w-full text-size-11 font-bold text-color-sub hover:text-white transition-colors py-1"
+            >
+              더보기 ({reviews.length - visibleCount}개 남음)
+            </button>
+          </div>
+        ) : undefined
+      }
+    >
+      <section aria-label="최근 리뷰 목록">
+        {isLoading && (
+          <section className="flex justify-center py-8">
+            <LoadingSpinner />
+          </section>
         )}
-      </div>
-      <div>
-        {MOCK_REVIEWS.map((review) => (
-          <ReviewItem
-            key={review.id}
-            userName={review.userName}
-            score={review.score}
-            text={review.text}
-            date={review.date}
-            avatarColor={review.avatarColor}
-            category={review.category}
-            isNew={review.isNew}
-          />
-        ))}
-      </div>
+        {!isLoading && error && (
+          <section className="px-size-18 py-size-14">
+            <ErrorMessage message={error} />
+          </section>
+        )}
+        {!isLoading && !error && reviews.length === 0 && (
+          <p className="text-size-12 text-color-muted py-8 text-center">
+            AI 분석을 실행하면 리뷰를 불러옵니다.
+          </p>
+        )}
+        {!isLoading && !error && displayedReviews.length > 0 && (
+          <ul>
+            {displayedReviews.map((review, index) => (
+              <ReviewItem
+                key={review.id}
+                userName={review.userName}
+                score={review.score}
+                text={review.text}
+                date={new Date(review.date).toLocaleDateString("ko-KR")}
+                dateTime={review.date}
+                avatarColor={AVATAR_COLORS[index % AVATAR_COLORS.length]}
+              />
+            ))}
+          </ul>
+        )}
+      </section>
     </Card>
   );
 }

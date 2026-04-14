@@ -1,62 +1,72 @@
 "use client";
 
-import { useState } from "react";
-import { useDashboardFilterStore, Period } from "@shared/model/dashboardFilterStore";
-
-export type { Period };
+import Image from "next/image";
+import StoreSelector from "@shared/ui/layout/StoreSelector";
+import type { Game } from "@features/game/model/games";
 
 interface TopbarProps {
-  gameName: string;
-  onBack: () => void;
+  games: Game[];
+  currentGameId: string;
+  onGoMain: () => void;
+  onSelectGame: (gameId: string) => void;
   onRunAI: () => void;
   isAnalyzing?: boolean;
 }
 
-const PERIODS: Period[] = ["7D", "30D", "90D"];
-
-export default function Topbar({ gameName, onBack, onRunAI, isAnalyzing = false }: TopbarProps) {
-  const { activePeriod, setPeriod } = useDashboardFilterStore();
-  const [isBackHovered, setIsBackHovered] = useState(false);
-
+export default function Topbar({
+  games,
+  currentGameId,
+  onGoMain,
+  onSelectGame,
+  onRunAI,
+  isAnalyzing = false,
+}: TopbarProps) {
   return (
-    <div className="flex items-center justify-between px-7 h-14 border-b border-border-color sticky top-0 z-[5] bg-black">
+    <header className="flex items-center justify-between px-10 py-size-22 border-b border-border-color sticky top-0 z-[5] bg-black">
       {/* 왼쪽 */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-8">
         <button
-          className={`flex items-center gap-1 px-size-10 py-size-5 rounded-size-8 border text-xs cursor-pointer transition-all duration-100 ${
-            isBackHovered
-              ? "text-white border-color-white-a20"
-              : "text-color-sub border-border-color"
-          }`}
-          onClick={onBack}
-          onMouseEnter={() => setIsBackHovered(true)}
-          onMouseLeave={() => setIsBackHovered(false)}
+          className="bg-transparent border-0 p-0 text-left cursor-pointer flex-shrink-0"
+          onClick={onGoMain}
+          aria-label="메인으로 이동"
         >
-          ← 목록
+          <span className="block text-size-22 font-black tracking-widest">SUPERCENT</span>
+          <span className="block text-size-12 tracking-md mt-0.5 text-color-pink">
+            Review Intelligence
+          </span>
         </button>
-        <div>
-          <div className="text-base font-extrabold">{gameName}</div>
-          <div className="text-size-11 mt-0.5 text-color-sub">AI Review Intelligence Dashboard</div>
-        </div>
+
+        <nav aria-label="게임 바로가기">
+          <ul className="flex items-center gap-2">
+            {games.map((game) => (
+              <li key={game.id}>
+                <button
+                  className={`w-size-30 h-size-30 rounded-size-7 border cursor-pointer transition-all duration-150 flex items-center justify-center overflow-hidden ${
+                    game.id === currentGameId
+                      ? "border-color-pink bg-color-pink-a10 ring-2 ring-color-pink shadow-[0_0_14px_rgba(255,45,122,0.35)] scale-105"
+                      : "border-border-color bg-color-card-2 hover:border-color-white-a20"
+                  }`}
+                  onClick={() => onSelectGame(game.id)}
+                  aria-label={`${game.name}로 이동`}
+                  aria-current={game.id === currentGameId ? "page" : undefined}
+                  title={game.name}
+                >
+                  <Image
+                    src={game.iconUrl}
+                    alt={game.name}
+                    width={30}
+                    height={30}
+                    className="w-full h-full object-cover rounded-size-7"
+                  />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
 
-      {/* 오른쪽 */}
-      <div className="flex items-center gap-2">
-        <div className="flex gap-px rounded-size-8 p-size-3 bg-color-card-2">
-          {PERIODS.map((period) => (
-            <button
-              key={period}
-              className={`text-size-11 font-semibold px-size-11 py-size-5 rounded-size-6 cursor-pointer border-none transition-all duration-100 ${
-                activePeriod === period
-                  ? "bg-color-card text-white"
-                  : "bg-transparent text-color-sub"
-              }`}
-              onClick={() => setPeriod(period)}
-            >
-              {period}
-            </button>
-          ))}
-        </div>
+      <div className="flex items-center gap-3">
+        <StoreSelector />
         <button
           className="flex items-center gap-size-6 text-white border-none rounded-size-8 px-size-14 py-2 text-xs font-bold cursor-pointer transition-opacity duration-150 disabled:opacity-40 disabled:cursor-not-allowed bg-color-pink"
           onClick={onRunAI}
@@ -66,6 +76,6 @@ export default function Topbar({ gameName, onBack, onRunAI, isAnalyzing = false 
           AI 분석 실행
         </button>
       </div>
-    </div>
+    </header>
   );
 }

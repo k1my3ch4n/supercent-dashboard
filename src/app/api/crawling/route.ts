@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
       score: review.score,
       text: review.text,
       date: review.date instanceof Date ? review.date.toISOString() : String(review.date),
+      country: lang,
     }));
 
     return Response.json({ reviews, total: reviews.length, appId, lang });
