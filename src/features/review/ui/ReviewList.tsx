@@ -41,35 +41,38 @@ export default function ReviewList() {
         ) : undefined
       }
     >
-      <div>
+      <section aria-label="최근 리뷰 목록">
         {isLoading && (
-          <div className="flex justify-center py-8">
+          <section className="flex justify-center py-8">
             <LoadingSpinner />
-          </div>
+          </section>
         )}
         {!isLoading && error && (
-          <div className="px-size-18 py-size-14">
+          <section className="px-size-18 py-size-14">
             <ErrorMessage message={error} />
-          </div>
+          </section>
         )}
         {!isLoading && !error && reviews.length === 0 && (
           <p className="text-size-12 text-color-muted py-8 text-center">
             AI 분석을 실행하면 리뷰를 불러옵니다.
           </p>
         )}
-        {!isLoading &&
-          !error &&
-          displayedReviews.map((review, index) => (
-            <ReviewItem
-              key={review.id}
-              userName={review.userName}
-              score={review.score}
-              text={review.text}
-              date={new Date(review.date).toLocaleDateString("ko-KR")}
-              avatarColor={AVATAR_COLORS[index % AVATAR_COLORS.length]}
-            />
-          ))}
-      </div>
+        {!isLoading && !error && displayedReviews.length > 0 && (
+          <ul>
+            {displayedReviews.map((review, index) => (
+              <ReviewItem
+                key={review.id}
+                userName={review.userName}
+                score={review.score}
+                text={review.text}
+                date={new Date(review.date).toLocaleDateString("ko-KR")}
+                dateTime={review.date}
+                avatarColor={AVATAR_COLORS[index % AVATAR_COLORS.length]}
+              />
+            ))}
+          </ul>
+        )}
+      </section>
     </Card>
   );
 }

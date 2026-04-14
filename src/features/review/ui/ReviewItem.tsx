@@ -3,6 +3,7 @@ interface ReviewItemProps {
   score: number;
   text: string;
   date: string;
+  dateTime?: string;
   avatarColor?: string;
   sentimentLabel?: string;
   category?: string;
@@ -38,6 +39,7 @@ export default function ReviewItem({
   score,
   text,
   date,
+  dateTime,
   avatarColor = "#3d0060",
   category,
   isNew = false,
@@ -46,41 +48,48 @@ export default function ReviewItem({
   const initial = userName.charAt(0).toUpperCase();
 
   return (
-    <div className="flex gap-3 px-size-18 py-size-14 border-b last:border-b-0 border-border-color">
-      {/* 아바타 */}
-      <div
-        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-        style={{ background: avatarColor }}
-      >
-        {initial}
-      </div>
-      {/* 내용 */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-bold">{userName}</span>
-          <span className="text-size-11 text-color-yellow">
-            {"★".repeat(score)}
-            {"☆".repeat(5 - score)}
-          </span>
-          <span
-            className={`text-size-10 font-bold px-1.5 py-px rounded-size-4 ${sentiment.bgClass} ${sentiment.textClass}`}
-          >
-            {sentiment.label}
-          </span>
-          {isNew && (
-            <span className="text-size-9 font-bold px-1.5 py-px rounded-size-3 bg-color-pink-a14 text-color-pink">
-              NEW
-            </span>
-          )}
-          {category && (
-            <span className="text-size-10 px-1.5 py-px rounded-size-4 border border-border-color text-color-sub bg-color-white-a03">
-              {category}
-            </span>
-          )}
-          <span className="text-size-10 ml-auto flex-shrink-0 text-color-muted">{date}</span>
+    <li className="list-none border-b last:border-b-0 border-border-color">
+      <article className="flex gap-3 px-size-18 py-size-14">
+        {/* 아바타 */}
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+          style={{ background: avatarColor }}
+        >
+          {initial}
         </div>
-        <p className="text-size-12 leading-[1.5] text-color-weak">{text}</p>
-      </div>
-    </div>
+        {/* 내용 */}
+        <div className="flex-1 min-w-0">
+          <header className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-bold">{userName}</span>
+            <span className="text-size-11 text-color-yellow">
+              {"★".repeat(score)}
+              {"☆".repeat(5 - score)}
+            </span>
+            <span
+              className={`text-size-10 font-bold px-1.5 py-px rounded-size-4 ${sentiment.bgClass} ${sentiment.textClass}`}
+            >
+              {sentiment.label}
+            </span>
+            {isNew && (
+              <span className="text-size-9 font-bold px-1.5 py-px rounded-size-3 bg-color-pink-a14 text-color-pink">
+                NEW
+              </span>
+            )}
+            {category && (
+              <span className="text-size-10 px-1.5 py-px rounded-size-4 border border-border-color text-color-sub bg-color-white-a03">
+                {category}
+              </span>
+            )}
+            <time
+              className="text-size-10 ml-auto flex-shrink-0 text-color-muted"
+              dateTime={dateTime ?? date}
+            >
+              {date}
+            </time>
+          </header>
+          <p className="text-size-12 leading-[1.5] text-color-weak">{text}</p>
+        </div>
+      </article>
+    </li>
   );
 }

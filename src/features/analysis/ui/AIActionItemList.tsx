@@ -10,8 +10,8 @@ export default function AIActionItemList() {
   const { result, isLoading } = useAnalysisStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasCollapsedOverflow, setHasCollapsedOverflow] = useState(false);
-  const cardContainerRef = useRef<HTMLDivElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
+  const cardContainerRef = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLElement | null>(null);
 
   const actionItems = result?.actionItems ?? [];
   const shouldShowToggle = !isLoading && (isExpanded || hasCollapsedOverflow);
@@ -37,7 +37,7 @@ export default function AIActionItemList() {
   }
 
   return (
-    <div ref={cardContainerRef}>
+    <section ref={cardContainerRef}>
       <Card
         className={`${isExpanded ? "h-auto" : "h-[620px] md:h-[460px]"} flex flex-col`}
         title="AI 추천 액션 아이템"
@@ -45,18 +45,18 @@ export default function AIActionItemList() {
         badgeVariant="pink"
         footer={
           shouldShowToggle ? (
-            <div className="relative z-20 px-size-18 py-size-14 border-t border-border-color bg-color-card">
+            <footer className="relative z-20 px-size-18 py-size-14 border-t border-border-color bg-color-card">
               <button
                 onClick={handleToggleExpand}
                 className="w-full text-size-11 font-bold text-color-sub hover:text-white transition-colors py-1"
               >
                 {isExpanded ? "접기" : "더보기"}
               </button>
-            </div>
+            </footer>
           ) : undefined
         }
       >
-        <div
+        <section
           ref={(node) => {
             contentRef.current = node;
             updateCollapsedOverflow();
@@ -64,21 +64,28 @@ export default function AIActionItemList() {
           className="px-size-18 py-size-14 pb-size-18 flex-1 min-h-0 flex flex-col gap-3"
         >
           {isLoading && (
-            <div className="flex-1 flex items-center justify-center">
+            <section className="flex-1 flex items-center justify-center">
               <LoadingSpinner />
-            </div>
+            </section>
           )}
           {!isLoading && !result && (
-            <div className="flex-1 flex items-center justify-center">
+            <section className="flex-1 flex items-center justify-center">
               <p className="text-size-12 text-color-muted text-center">
                 분석 결과가 없습니다. AI 분석을 실행하세요.
               </p>
-            </div>
+            </section>
           )}
-          {!isLoading &&
-            actionItems.map((item, index) => <ActionItemCard key={index} item={item} />)}
-        </div>
+          {!isLoading && actionItems.length > 0 && (
+            <ul className="flex flex-col gap-3">
+              {actionItems.map((item, index) => (
+                <li key={index} className="list-none">
+                  <ActionItemCard item={item} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
       </Card>
-    </div>
+    </section>
   );
 }

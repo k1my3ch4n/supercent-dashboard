@@ -37,34 +37,34 @@ export default function ActionItemCard({ item }: ActionItemCardProps) {
   const chips = [`📋 ${item.reviewCount}개 리뷰`, `👥 ${item.targetSegment}`, `⏱ ${item.timeline}`];
 
   return (
-    <div
+    <article
       className={`rounded-size-8 border cursor-pointer transition-colors duration-100 bg-color-card-2 ${
         isHovered ? "border-color-white-a12" : "border-border-color"
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div
+      <header
         className={`flex gap-3 px-size-14 pt-size-13 pb-size-10 border-l-size-3 ${priorityBorderColorClass[item.priority]}`}
       >
         <PriorityTag priority={item.priority} />
         <div className="flex-1 min-w-0">
-          <div className="text-size-13 font-bold mb-size-3">{item.title}</div>
-          <div className="text-size-11 leading-[1.5] text-color-sub">{item.description}</div>
-          <div className="flex gap-2 flex-wrap mt-size-6">
+          <h4 className="text-size-13 font-bold mb-size-3">{item.title}</h4>
+          <p className="text-size-11 leading-[1.5] text-color-sub">{item.description}</p>
+          <ul className="flex gap-2 flex-wrap mt-size-6">
             {chips.map((chip) => (
-              <span
+              <li
                 key={chip}
-                className="text-size-10 px-size-7 py-0.5 rounded-size-4 border bg-color-white-a04 text-color-sub border-border-color"
+                className="list-none text-size-10 px-size-7 py-0.5 rounded-size-4 border bg-color-white-a04 text-color-sub border-border-color"
               >
                 {chip}
-              </span>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
-      </div>
+      </header>
 
-      <div className="flex items-center gap-size-10 px-size-14 py-size-9 border-t border-border-color bg-color-black-a20">
+      <footer className="flex items-center gap-size-10 px-size-14 py-size-9 border-t border-border-color bg-color-black-a20">
         <span className="text-size-10 flex-shrink-0 text-color-muted">{item.impactLabel}</span>
         <ProgressBar value={item.impactPercent} color={color} />
         <span className={`text-size-11 font-bold flex-shrink-0 ${impactTextColorClass[color]}`}>
@@ -84,7 +84,7 @@ export default function ActionItemCard({ item }: ActionItemCardProps) {
         >
           Jira 생성
         </button>
-      </div>
-    </div>
+      </footer>
+    </article>
   );
 }

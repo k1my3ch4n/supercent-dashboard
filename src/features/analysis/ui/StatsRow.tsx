@@ -30,7 +30,7 @@ export default function StatsRow() {
   const averageRating = totalReviews > 0 ? (totalScore / totalReviews).toFixed(1) : "-";
 
   return (
-    <div className="grid gap-size-3 grid-cols-4">
+    <section className="grid gap-size-3 grid-cols-4" aria-label="핵심 통계">
       <StatCard
         label="Collected Reviews"
         value={totalReviews.toLocaleString()}
@@ -72,6 +72,6 @@ export default function StatsRow() {
         changeType="neutral"
         valueColorClass="text-color-pink"
       />
-    </div>
+    </section>
   );
 }

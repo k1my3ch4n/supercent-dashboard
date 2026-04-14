@@ -31,8 +31,8 @@ export default function ReplyCard({ item, index }: ReplyCardProps) {
   const [isRegenerateHovered, setIsRegenerateHovered] = useState(false);
 
   return (
-    <div className="rounded-size-8 border border-border-color">
-      <div className="px-size-14 py-size-11 border-b bg-color-pink-a04 border-border-color">
+    <article className="rounded-size-8 border border-border-color">
+      <header className="px-size-14 py-size-11 border-b bg-color-pink-a04 border-border-color">
         <div className="flex items-center justify-between mb-size-5">
           <div className="flex items-center gap-size-7">
             <div
@@ -46,20 +46,22 @@ export default function ReplyCard({ item, index }: ReplyCardProps) {
               {"☆".repeat(5 - item.score)}
             </span>
           </div>
-          <span className="text-size-10 text-color-muted">{item.date}</span>
+          <time className="text-size-10 text-color-muted" dateTime={item.date}>
+            {item.date}
+          </time>
         </div>
         <p className="text-size-11 leading-[1.5] text-color-soft">{item.reviewText}</p>
-      </div>
+      </header>
 
-      <div className="px-size-14 py-size-11">
-        <div className="flex items-center gap-size-5 text-size-10 font-bold tracking-sm uppercase mb-size-6 text-color-purple">
+      <section className="px-size-14 py-size-11">
+        <h4 className="flex items-center gap-size-5 text-size-10 font-bold tracking-sm uppercase mb-size-6 text-color-purple">
           🤖 AI 초안{" "}
           <span className="text-size-9 font-normal normal-case text-color-muted">
             {item.languageLabel}
           </span>
-        </div>
+        </h4>
         <p className="text-size-11 leading-[1.6] text-color-sub">{item.draftText}</p>
-        <div className="flex gap-size-7 mt-size-9">
+        <footer className="flex gap-size-7 mt-size-9">
           <button className="text-size-10 font-bold px-size-10 py-1 rounded-size-4 border cursor-pointer transition-all duration-100 bg-color-purple-a12 border-color-purple-a30 text-color-purple">
             답변 등록
           </button>
@@ -85,8 +87,8 @@ export default function ReplyCard({ item, index }: ReplyCardProps) {
           >
             재생성
           </button>
-        </div>
-      </div>
-    </div>
+        </footer>
+      </section>
+    </article>
   );
 }

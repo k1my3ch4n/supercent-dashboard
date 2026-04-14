@@ -10,8 +10,8 @@ export default function AICSAutoReply() {
   const { result, isLoading } = useAnalysisStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasCollapsedOverflow, setHasCollapsedOverflow] = useState(false);
-  const cardContainerRef = useRef<HTMLDivElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
+  const cardContainerRef = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLElement | null>(null);
 
   const csReplies = result?.csReplies ?? [];
   const shouldShowToggle = !isLoading && (isExpanded || hasCollapsedOverflow);
@@ -37,7 +37,7 @@ export default function AICSAutoReply() {
   }
 
   return (
-    <div ref={cardContainerRef}>
+    <section ref={cardContainerRef}>
       <Card
         className={`${isExpanded ? "h-auto" : "h-[620px] md:h-[460px]"} flex flex-col`}
         title="AI CS 자동 답변"
@@ -45,18 +45,18 @@ export default function AICSAutoReply() {
         badgeVariant="purple"
         footer={
           shouldShowToggle ? (
-            <div className="relative z-20 px-size-18 py-size-14 border-t border-border-color bg-color-card">
+            <footer className="relative z-20 px-size-18 py-size-14 border-t border-border-color bg-color-card">
               <button
                 onClick={handleToggleExpand}
                 className="w-full text-size-11 font-bold text-color-sub hover:text-white transition-colors py-1"
               >
                 {isExpanded ? "접기" : "더보기"}
               </button>
-            </div>
+            </footer>
           ) : undefined
         }
       >
-        <div
+        <section
           ref={(node) => {
             contentRef.current = node;
             updateCollapsedOverflow();
@@ -64,26 +64,31 @@ export default function AICSAutoReply() {
           className="px-size-18 py-size-14 pb-size-18 flex-1 min-h-0 flex flex-col gap-size-14"
         >
           {isLoading && (
-            <div className="flex-1 flex items-center justify-center">
+            <section className="flex-1 flex items-center justify-center">
               <LoadingSpinner />
-            </div>
+            </section>
           )}
           {!isLoading && !result && (
-            <div className="flex-1 flex items-center justify-center">
+            <section className="flex-1 flex items-center justify-center">
               <p className="text-size-12 text-color-muted text-center">
                 분석 결과가 없습니다. AI 분석을 실행하세요.
               </p>
-            </div>
+            </section>
           )}
           {!isLoading && result?.csReplies.length === 0 && (
             <p className="text-size-11 text-color-muted">생성된 CS 자동 답변이 없습니다.</p>
           )}
-          {!isLoading &&
-            csReplies.map((replyItem, index) => (
-              <ReplyCard key={replyItem.reviewId} item={replyItem} index={index} />
-            ))}
-        </div>
+          {!isLoading && csReplies.length > 0 && (
+            <ul className="flex flex-col gap-size-14">
+              {csReplies.map((replyItem, index) => (
+                <li key={replyItem.reviewId} className="list-none">
+                  <ReplyCard item={replyItem} index={index} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
       </Card>
-    </div>
+    </section>
   );
 }

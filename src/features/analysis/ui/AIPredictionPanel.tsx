@@ -36,8 +36,8 @@ export default function AIPredictionPanel() {
   const { result, isLoading } = useAnalysisStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasCollapsedOverflow, setHasCollapsedOverflow] = useState(false);
-  const cardContainerRef = useRef<HTMLDivElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
+  const cardContainerRef = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLElement | null>(null);
   const shouldShowToggle = !isLoading && (isExpanded || hasCollapsedOverflow);
 
   function updateCollapsedOverflow() {
@@ -61,7 +61,7 @@ export default function AIPredictionPanel() {
   }
 
   return (
-    <div ref={cardContainerRef}>
+    <section ref={cardContainerRef}>
       <Card
         className={`${isExpanded ? "h-auto" : "h-[620px] md:h-[460px]"} flex flex-col`}
         title="AI 예측 & 이상 탐지"
@@ -69,18 +69,18 @@ export default function AIPredictionPanel() {
         badgeVariant="blue"
         footer={
           shouldShowToggle ? (
-            <div className="relative z-20 px-size-18 py-size-14 border-t border-border-color bg-color-card">
+            <footer className="relative z-20 px-size-18 py-size-14 border-t border-border-color bg-color-card">
               <button
                 onClick={handleToggleExpand}
                 className="w-full text-size-11 font-bold text-color-sub hover:text-white transition-colors py-1"
               >
                 {isExpanded ? "접기" : "더보기"}
               </button>
-            </div>
+            </footer>
           ) : undefined
         }
       >
-        <div
+        <section
           ref={(node) => {
             contentRef.current = node;
             updateCollapsedOverflow();
@@ -88,24 +88,24 @@ export default function AIPredictionPanel() {
           className="px-size-18 py-size-14 pb-size-18 flex-1 min-h-0 flex flex-col gap-size-14"
         >
           {isLoading && (
-            <div className="flex-1 flex items-center justify-center">
+            <section className="flex-1 flex items-center justify-center">
               <LoadingSpinner />
-            </div>
+            </section>
           )}
           {!isLoading && !result && (
-            <div className="flex-1 flex items-center justify-center">
+            <section className="flex-1 flex items-center justify-center">
               <p className="text-size-12 text-color-muted text-center">
                 분석 결과가 없습니다. AI 분석을 실행하세요.
               </p>
-            </div>
+            </section>
           )}
           {!isLoading && result && (
-            <>
-              <div className="flex items-center gap-3 p-size-14 rounded-size-8 border bg-color-card-2 border-border-color">
-                <div>
-                  <div className="text-size-10 font-semibold tracking-xs mb-1 text-color-sub">
+            <section aria-label="예측 및 이상 탐지 결과" className="flex flex-col gap-size-14">
+              <article className="flex items-center gap-3 p-size-14 rounded-size-8 border bg-color-card-2 border-border-color">
+                <section>
+                  <h4 className="text-size-10 font-semibold tracking-xs mb-1 text-color-sub">
                     현재 평점
-                  </div>
+                  </h4>
                   <div className="flex items-baseline gap-2">
                     <span className="text-size-28 font-black text-color-yellow">
                       {result.prediction.currentRating.toFixed(1)}
@@ -115,30 +115,30 @@ export default function AIPredictionPanel() {
                       {result.prediction.predictedRating14d.toFixed(1)}
                     </span>
                   </div>
-                  <div className="text-size-10 mt-size-3 text-color-sub">14일 후 예측</div>
-                </div>
-                <div className="ml-auto text-center">
-                  <div className="text-size-18 font-extrabold text-color-purple">
+                  <p className="text-size-10 mt-size-3 text-color-sub">14일 후 예측</p>
+                </section>
+                <section className="ml-auto text-center">
+                  <p className="text-size-18 font-extrabold text-color-purple">
                     {result.prediction.confidence}%
-                  </div>
-                  <div className="text-size-9 uppercase tracking-sm text-color-muted">신뢰도</div>
-                </div>
-              </div>
+                  </p>
+                  <p className="text-size-9 uppercase tracking-sm text-color-muted">신뢰도</p>
+                </section>
+              </article>
 
-              <div>
-                <div className="text-size-10 font-bold tracking-sm uppercase mb-2 text-color-muted">
+              <section>
+                <h4 className="text-size-10 font-bold tracking-sm uppercase mb-2 text-color-muted">
                   이상 탐지
-                </div>
+                </h4>
                 {result.anomalies.length === 0 && (
                   <p className="text-size-11 text-color-muted">현재 감지된 이상 신호가 없습니다.</p>
                 )}
-                <div className="flex flex-col gap-2">
+                <ul className="flex flex-col gap-2">
                   {result.anomalies.map((anomaly, index) => {
                     const config = levelConfig[anomaly.level];
                     return (
-                      <div
+                      <li
                         key={index}
-                        className="flex items-start gap-size-10 px-3 py-size-10 rounded-size-8 border bg-color-card-2 border-border-color"
+                        className="list-none flex items-start gap-size-10 px-3 py-size-10 rounded-size-8 border bg-color-card-2 border-border-color"
                       >
                         <span className="text-base flex-shrink-0 mt-px">
                           {anomalyIcon[anomaly.level]}
@@ -152,15 +152,15 @@ export default function AIPredictionPanel() {
                         >
                           {config.label}
                         </span>
-                      </div>
+                      </li>
                     );
                   })}
-                </div>
-              </div>
-            </>
+                </ul>
+              </section>
+            </section>
           )}
-        </div>
+        </section>
       </Card>
-    </div>
+    </section>
   );
 }
