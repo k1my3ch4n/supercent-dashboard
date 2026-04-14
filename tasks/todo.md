@@ -353,9 +353,9 @@
 
 ## Phase 7: 배포
 
-- [ ] Vercel 프로젝트 연결
-- [ ] 환경변수 Vercel에 등록 (`GEMINI_API_KEY`)
-- [ ] 프로덕션 빌드 확인 및 배포
+- [x] Vercel 프로젝트 연결
+- [x] 환경변수 Vercel에 등록 (`GEMINI_API_KEY`)
+- [x] 프로덕션 빌드 확인 및 배포
 
 ---
 
