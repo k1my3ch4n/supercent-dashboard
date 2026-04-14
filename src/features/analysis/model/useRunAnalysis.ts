@@ -6,6 +6,8 @@ export function useRunAnalysis(appId: string) {
   const { isLoading: isFetching } = useReviewStore();
 
   const runAnalysis = async () => {
+    useAnalysisStore.getState().reset();
+
     await useReviewStore.getState().fetchReviews(appId);
 
     const { reviews, error } = useReviewStore.getState();

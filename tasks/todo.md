@@ -246,6 +246,23 @@
   - 대시보드 진입 시 `game.appId`로 리뷰 자동 fetch (`useEffect`)
   - "AI 분석 실행" 클릭 시 리뷰 재fetch → Gemini 분석 순차 실행 (`useRunAnalysis`)
 
+---
+
+## Phase 8: 캐싱 및 자동 분석 (2026-04-14)
+
+- [x] **API 캐싱 적용**
+  - `GET /api/crawling` — `use cache` + `cacheLife('hours')` 적용 (appId·lang·num 조합이 캐시 키)
+  - `POST /api/analyze` — 인메모리 Map 캐시 적용 (리뷰 ID SHA-256 해시 기반, TTL 1시간)
+  - `next.config.ts`에 `cacheComponents: true` 추가
+
+- [x] **페이지 진입 시 AI 분석 자동 실행**
+  - `DashboardWidget` useEffect에서 `fetchReviews` 대신 `runAnalysis` 직접 호출
+  - `runAnalysis` 내부에 `reset()` 통합 → 버튼 클릭 시 기존 결과 초기화 후 재분석
+
+- [x] **Suspense 경계 적용** (`src/app/detail/[id]/page.tsx`)
+  - `cacheComponents: true` 환경에서 `params` 접근 시 발생하는 blocking-route 에러 수정
+  - `DashboardContent` 분리 후 `<Suspense>`로 감싸는 구조로 전환
+
 ## 추후 검토 항목 (미결)
 
 - [x] **AICSAutoReply 실 데이터 연동**
@@ -336,9 +353,9 @@
 
 ## Phase 7: 배포
 
-- [ ] Vercel 프로젝트 연결
-- [ ] 환경변수 Vercel에 등록 (`GEMINI_API_KEY`)
-- [ ] 프로덕션 빌드 확인 및 배포
+- [x] Vercel 프로젝트 연결
+- [x] 환경변수 Vercel에 등록 (`GEMINI_API_KEY`)
+- [x] 프로덕션 빌드 확인 및 배포
 
 ---
 

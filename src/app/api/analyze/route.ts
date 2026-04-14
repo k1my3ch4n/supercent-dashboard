@@ -1,7 +1,43 @@
+import { createHash } from "crypto";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { NextRequest } from "next/server";
 import type { Review } from "@shared/types/review";
 import type { AnalysisResult } from "@shared/types/analysis";
+
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1시간
+
+interface CacheEntry {
+  result: AnalysisResult;
+  reviewCount: number;
+  warnings: string[];
+  expiresAt: number;
+}
+
+const analysisCache = new Map<string, CacheEntry>();
+
+function buildCacheKey(reviews: Review[]): string {
+  const ids = reviews
+    .map((review) => review.id)
+    .sort()
+    .join(",");
+  return createHash("sha256").update(ids).digest("hex");
+}
+
+function getCachedEntry(key: string): CacheEntry | null {
+  const entry = analysisCache.get(key);
+  if (!entry) {
+    return null;
+  }
+  if (Date.now() > entry.expiresAt) {
+    analysisCache.delete(key);
+    return null;
+  }
+  return entry;
+}
+
+function setCacheEntry(key: string, value: Omit<CacheEntry, "expiresAt">): void {
+  analysisCache.set(key, { ...value, expiresAt: Date.now() + CACHE_TTL_MS });
+}
 
 const MAX_REVIEWS = 500;
 const MIN_SCORE = 1;
@@ -483,6 +519,16 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const cacheKey = buildCacheKey(reviews);
+  const cached = getCachedEntry(cacheKey);
+  if (cached) {
+    return Response.json({
+      result: cached.result,
+      reviewCount: cached.reviewCount,
+      warnings: cached.warnings,
+    });
+  }
+
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
@@ -492,6 +538,8 @@ export async function POST(request: NextRequest) {
     const responseText = geminiResult.response.text();
 
     const { result: analysisResult, warnings } = parseAnalysisResult(responseText, reviews);
+
+    setCacheEntry(cacheKey, { result: analysisResult, reviewCount: reviews.length, warnings });
 
     return Response.json({ result: analysisResult, reviewCount: reviews.length, warnings });
   } catch (error) {
