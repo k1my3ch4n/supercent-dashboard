@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import StoreSelector from "@shared/ui/layout/StoreSelector";
 import type { Game } from "@features/game/model/games";
 
@@ -50,7 +51,13 @@ export default function Topbar({
                   aria-current={game.id === currentGameId ? "page" : undefined}
                   title={game.name}
                 >
-                  {game.emoji}
+                  <Image
+                    src={game.iconUrl}
+                    alt={game.name}
+                    width={30}
+                    height={30}
+                    className="w-full h-full object-cover rounded-size-7"
+                  />
                 </button>
               </li>
             ))}
