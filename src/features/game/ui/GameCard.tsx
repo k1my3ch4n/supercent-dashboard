@@ -23,7 +23,14 @@ export default function GameCard({ game, onSelect }: GameCardProps) {
       onClick={onSelect}
     >
       <figure className="w-full relative aspect-square" style={{ background: game.gradient }}>
-        <Image src={game.iconUrl} alt={game.name} fill className="object-cover" />
+        <Image
+          src={game.iconUrl}
+          alt={game.name}
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="object-cover"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent from-50% to-black/55" />
 
         <figcaption className="absolute inset-0 flex flex-col items-center justify-center gap-size-14 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 px-size-14">
