@@ -263,6 +263,10 @@
 
 ## UI 조정 (2026-04-14)
 
+- [x] 분석 API 파싱 안정화 (`src/app/api/analyze/route.ts`)
+  - 엄격 fail-fast 검증을 완화하고 필드 단위 fallback 정규화 적용
+  - 부분 실패 시에도 기본값으로 결과를 구성하고 warnings를 반환하도록 개선
+
 - [x] 대시보드 사이드바 제거 (`src/widgets/DashboardWidget.tsx`)
 - [x] 헤더를 메인 로고 중심으로 단순화하고, 로고 클릭 시 메인(`/`) 이동 연결 (`src/shared/ui/layout/Topbar.tsx`)
 - [x] `StoreSelector` + `AI 분석 실행` 버튼을 헤더 우측으로 이동 (`src/shared/ui/layout/Topbar.tsx`)
@@ -302,6 +306,21 @@
 - [x] `Card` 공용 헤더 props 도입 (`src/shared/ui/Card.tsx`)
   - `title`, `subtitle`, `badgeVariant` 기반으로 헤더를 Card 내부에서 렌더링
   - 분석 패널 4개의 중복 헤더 마크업 제거
+
+- [x] 분석 패널 4종 더보기/접기 UX 통일 (`src/features/analysis/ui/*`)
+  - 대상: `AIActionItemList`, `AIPainPointClusters`, `AICSAutoReply`, `AIPredictionPanel`
+  - 하단 footer 토글(`더보기`/`접기`) + 토글 시 해당 카드 상단으로 스크롤 이동
+  - 접힌 상태에서 실제 overflow가 있을 때만 토글 노출되도록 조건 개선
+
+- [x] 분석 카드 레이아웃 안정화 (`src/features/analysis/ui/ActionItemCard.tsx`, `src/features/analysis/ui/ReplyCard.tsx`, `src/widgets/DashboardWidget.tsx`)
+  - 내부 카드 `overflow-hidden` 제거로 내용 클리핑 완화
+  - 분석 2x2 그리드에 `items-start` 적용으로 카드별 확장 높이 충돌 방지
+
+- [x] 시멘틱 HTML 태그 전면 적용 (`src/**/*.tsx`)
+  - 리스트 렌더링 영역을 `ul/li` 구조로 통일 (`GameGrid`, `ReviewList`, 분석 카드 목록들)
+  - 독립 콘텐츠 카드에 `article/header/footer` 적용 (`GameCard`, `ActionItemCard`, `ClusterCard`, `ReplyCard`, `StatCard`)
+  - 페이지/구획 의미 강화 (`Topbar`의 `header/nav`, 요약/통계/패널 `section` 구조)
+  - 접근성 시멘틱 보강 (`time`, `role="alert"`, `role="status"`, `role="progressbar"`)
 
 ---
 
