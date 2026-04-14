@@ -22,16 +22,16 @@ export default function Topbar({
   isAnalyzing = false,
 }: TopbarProps) {
   return (
-    <header className="flex items-center justify-between px-7 h-14 border-b border-border-color sticky top-0 z-[5] bg-black">
+    <header className="flex items-center justify-between px-10 py-size-22 border-b border-border-color sticky top-0 z-[5] bg-black">
       {/* 왼쪽 */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-8">
         <button
-          className="bg-transparent border-0 p-0 text-left cursor-pointer"
+          className="bg-transparent border-0 p-0 text-left cursor-pointer flex-shrink-0"
           onClick={onGoMain}
           aria-label="메인으로 이동"
         >
-          <span className="block text-size-18 font-black tracking-widest">SUPERCENT</span>
-          <span className="block text-size-10 tracking-md mt-0.5 text-color-pink">
+          <span className="block text-size-22 font-black tracking-widest">SUPERCENT</span>
+          <span className="block text-size-12 tracking-md mt-0.5 text-color-pink">
             Review Intelligence
           </span>
         </button>
@@ -41,7 +41,7 @@ export default function Topbar({
             {games.map((game) => (
               <li key={game.id}>
                 <button
-                  className={`w-size-30 h-size-30 rounded-size-7 border text-base cursor-pointer transition-all duration-150 ${
+                  className={`w-size-30 h-size-30 rounded-size-7 border cursor-pointer transition-all duration-150 flex items-center justify-center overflow-hidden ${
                     game.id === currentGameId
                       ? "border-color-pink bg-color-pink-a10 ring-2 ring-color-pink shadow-[0_0_14px_rgba(255,45,122,0.35)] scale-105"
                       : "border-border-color bg-color-card-2 hover:border-color-white-a20"
