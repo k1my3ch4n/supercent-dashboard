@@ -111,7 +111,13 @@ export default function AIPredictionPanel() {
                       {result.prediction.currentRating.toFixed(1)}
                     </span>
                     <span className="text-base">→</span>
-                    <span className="text-size-22 font-black text-color-pink">
+                    <span
+                      className={`text-size-22 font-black ${
+                        result.prediction.predictedRating14d >= result.prediction.currentRating
+                          ? "text-color-green"
+                          : "text-color-pink"
+                      }`}
+                    >
                       {result.prediction.predictedRating14d.toFixed(1)}
                     </span>
                   </div>

@@ -3,6 +3,16 @@
 import { useState } from "react";
 import type { CSAutoReplyItem } from "@shared/types/analysis";
 
+function getInitial(userName: string): string {
+  const trimmedName = userName.trim();
+
+  if (trimmedName.length === 0) {
+    return "?";
+  }
+
+  return trimmedName[0].toUpperCase();
+}
+
 const AVATAR_COLOR_CLASS = [
   "bg-color-purple",
   "bg-color-pink",
@@ -14,16 +24,6 @@ const AVATAR_COLOR_CLASS = [
 interface ReplyCardProps {
   item: CSAutoReplyItem;
   index: number;
-}
-
-function getInitial(userName: string): string {
-  const trimmedName = userName.trim();
-
-  if (trimmedName.length === 0) {
-    return "?";
-  }
-
-  return trimmedName[0].toUpperCase();
 }
 
 export default function ReplyCard({ item, index }: ReplyCardProps) {
@@ -47,7 +47,7 @@ export default function ReplyCard({ item, index }: ReplyCardProps) {
             </span>
           </div>
           <time className="text-size-10 text-color-muted" dateTime={item.date}>
-            {item.date}
+            {new Date(item.date).toLocaleDateString("ko-KR")}
           </time>
         </div>
         <p className="text-size-11 leading-[1.5] text-color-soft">{item.reviewText}</p>
