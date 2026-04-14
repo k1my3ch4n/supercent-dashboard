@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Topbar from "@shared/ui/layout/Topbar";
 import AISummaryBlock from "@features/analysis/ui/AISummaryBlock";
@@ -10,9 +9,9 @@ import AIPainPointClusters from "@features/analysis/ui/AIPainPointClusters";
 import AICSAutoReply from "@features/analysis/ui/AICSAutoReply";
 import AIPredictionPanel from "@features/analysis/ui/AIPredictionPanel";
 import ReviewList from "@features/review/ui/ReviewList";
-import { useRunAnalysis } from "@features/analysis/model/useRunAnalysis";
 import { useGameStore } from "@features/game/model/gameStore";
 import { GAMES } from "@features/game/model/games";
+import { useDashboardData } from "@features/analysis/model/useDashboardData";
 
 interface DashboardWidgetProps {
   gameId: string;
@@ -23,11 +22,7 @@ export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
   const games = useGameStore((state) => state.games);
   const game = games.find((game) => game.id === gameId) ?? GAMES[0];
 
-  const { isAnalyzing, runAnalysis } = useRunAnalysis(game.appId);
-
-  useEffect(() => {
-    runAnalysis();
-  }, [game.appId]); // eslint-disable-line react-hooks/exhaustive-deps
+  const { isAnalyzing, handleRunAI } = useDashboardData(game.appId);
 
   const handleGoMain = () => {
     router.push("/");
@@ -44,7 +39,7 @@ export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
         currentGameId={game.id}
         onGoMain={handleGoMain}
         onSelectGame={handleSelectGame}
-        onRunAI={runAnalysis}
+        onRunAI={handleRunAI}
         isAnalyzing={isAnalyzing}
       />
 
