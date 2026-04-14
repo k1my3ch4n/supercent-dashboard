@@ -9,12 +9,17 @@ interface AnalysisState {
   isLoading: boolean;
   error: string | null;
   analyzeReviews: (reviews: Review[]) => Promise<void>;
+  reset: () => void;
 }
 
 export const useAnalysisStore = create<AnalysisState>((set) => ({
   result: null,
   isLoading: false,
   error: null,
+  reset: () => {
+    analysisAbortController?.abort();
+    set({ result: null, isLoading: false, error: null });
+  },
 
   analyzeReviews: async (reviews: Review[]) => {
     analysisAbortController?.abort();
