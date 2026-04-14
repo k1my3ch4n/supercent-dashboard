@@ -41,18 +41,18 @@ export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
   };
 
   return (
-    <div className="flex min-h-screen">
-      <main className="flex flex-col flex-1">
-        <Topbar
-          games={games}
-          currentGameId={game.id}
-          onGoMain={handleGoMain}
-          onSelectGame={handleSelectGame}
-          onRunAI={runAnalysis}
-          isAnalyzing={isAnalyzing}
-        />
+    <div className="flex min-h-screen flex-col">
+      <Topbar
+        games={games}
+        currentGameId={game.id}
+        onGoMain={handleGoMain}
+        onSelectGame={handleSelectGame}
+        onRunAI={runAnalysis}
+        isAnalyzing={isAnalyzing}
+      />
 
-        <div className="flex flex-col gap-size-18 px-7 py-size-22">
+      <main className="flex flex-col flex-1">
+        <section className="flex flex-col gap-size-18 px-7 py-size-22">
           {/* AI 요약 */}
           <section id="section-insights">
             <AISummaryBlock />
@@ -83,7 +83,7 @@ export default function DashboardWidget({ gameId }: DashboardWidgetProps) {
           <section id="section-reviews">
             <ReviewList />
           </section>
-        </div>
+        </section>
       </main>
     </div>
   );

@@ -21,37 +21,40 @@ export default function StoreSelector() {
   const [hoveredStore, setHoveredStore] = useState<StoreOption | null>(null);
 
   return (
-    <div className="flex items-center gap-2">
-      {STORES.map((store) => (
-        <button
-          key={store.key}
-          className={`flex items-center gap-size-6 px-size-14 py-size-7 rounded-full border text-xs font-semibold cursor-pointer transition-all duration-150 disabled:opacity-35 disabled:cursor-not-allowed ${
-            activeStore === store.key
-              ? "border-color-pink bg-color-pink-a10 text-white"
-              : hoveredStore === store.key && store.available
-                ? "border-color-white-a20 text-white"
-                : "border-border-color bg-transparent text-color-sub"
-          }`}
-          disabled={!store.available}
-          onClick={() => {
-            if (store.available) {
-              setStore(store.key);
-            }
-          }}
-          onMouseEnter={() => setHoveredStore(store.key)}
-          onMouseLeave={() => setHoveredStore(null)}
-        >
-          <span className="w-size-14 h-size-14 flex-shrink-0">
-            <store.Icon className="w-full h-full" />
-          </span>
-          {store.label}
-          {!store.available && (
-            <span className="text-size-9 font-bold px-size-5 py-px rounded-size-3 bg-color-white-a06 text-color-muted">
-              SOON
-            </span>
-          )}
-        </button>
-      ))}
-    </div>
+    <nav aria-label="스토어 선택">
+      <ul className="flex items-center gap-2">
+        {STORES.map((store) => (
+          <li key={store.key}>
+            <button
+              className={`flex items-center gap-size-6 px-size-14 py-size-7 rounded-full border text-xs font-semibold cursor-pointer transition-all duration-150 disabled:opacity-35 disabled:cursor-not-allowed ${
+                activeStore === store.key
+                  ? "border-color-pink bg-color-pink-a10 text-white"
+                  : hoveredStore === store.key && store.available
+                    ? "border-color-white-a20 text-white"
+                    : "border-border-color bg-transparent text-color-sub"
+              }`}
+              disabled={!store.available}
+              onClick={() => {
+                if (store.available) {
+                  setStore(store.key);
+                }
+              }}
+              onMouseEnter={() => setHoveredStore(store.key)}
+              onMouseLeave={() => setHoveredStore(null)}
+            >
+              <span className="w-size-14 h-size-14 flex-shrink-0">
+                <store.Icon className="w-full h-full" />
+              </span>
+              {store.label}
+              {!store.available && (
+                <span className="text-size-9 font-bold px-size-5 py-px rounded-size-3 bg-color-white-a06 text-color-muted">
+                  SOON
+                </span>
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

@@ -18,7 +18,13 @@ export default function ProgressBar({ value, color = "pink", className = "" }: P
   const clampedValue = Math.min(100, Math.max(0, value));
 
   return (
-    <div className={`flex-1 h-size-5 rounded-full overflow-hidden bg-border-color ${className}`}>
+    <div
+      className={`flex-1 h-size-5 rounded-full overflow-hidden bg-border-color ${className}`}
+      role="progressbar"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={clampedValue}
+    >
       <div
         className={`h-full rounded-full ${PROGRESS_BAR_COLOR_CLASS[color]}`}
         style={{ width: `${clampedValue}%` }}

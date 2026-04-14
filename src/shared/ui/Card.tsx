@@ -29,15 +29,15 @@ export default function Card({
       className={`rounded-size-14 overflow-hidden border border-border-color bg-color-card ${className}`}
     >
       {shouldRenderHeader && (
-        <div
+        <header
           className={`flex items-center justify-between px-size-18 py-size-14 border-b border-border-color ${headerClassName}`}
         >
           <div>
-            {title && <div className="text-size-14 font-extrabold">{title}</div>}
-            {subtitle && <div className="text-size-11 mt-0.5 text-color-sub">{subtitle}</div>}
+            {title && <h3 className="text-size-14 font-extrabold">{title}</h3>}
+            {subtitle && <p className="text-size-11 mt-0.5 text-color-sub">{subtitle}</p>}
           </div>
           {badgeVariant && <Badge variant={badgeVariant}>{badgeText}</Badge>}
-        </div>
+        </header>
       )}
       {children}
       {footer}
